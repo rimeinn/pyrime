@@ -3,7 +3,7 @@ exclude: ^templates/
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-added-large-files
       - id: fix-byte-order-marker
@@ -75,16 +75,16 @@ repos:
         additional_dependencies:
           - markdown-it-texmath
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.11.13
+    rev: v0.12.8
     hooks:
       - id: ruff
       - id: ruff-format
   - repo: https://github.com/kumaraditya303/mirrors-pyright
-    rev: v1.1.401
+    rev: v1.1.403
     hooks:
       - id: pyright
   - repo: https://github.com/trim21/pre-commit-mirror-meson
-    rev: v1.8.2
+    rev: v1.8.3
     hooks:
       - id: meson-fmt
 

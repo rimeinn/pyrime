@@ -13,9 +13,9 @@ Build-Depends: cython3,
                python3-mesonpy
 Rules-Requires-Root: no
 Standards-Version: 4.6.0
-Homepage: https://github.com/Freed-Wu/pyrime
-Vcs-Git: https://github.com/Freed-Wu/pyrime
-Vcs-Browser: https://github.com/Freed-Wu/pyrime
+Homepage: https://github.com/rimeinn/pyrime
+Vcs-Git: https://github.com/rimeinn/pyrime
+Vcs-Browser: https://github.com/rimeinn/pyrime
 
 Package: python3-pyrime
 Architecture: amd64 arm64 armel armhf i386 mips64el mipsel powerpc s390x
