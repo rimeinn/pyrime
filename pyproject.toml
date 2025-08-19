@@ -30,7 +30,7 @@ classifiers = [
 
 [project.optional-dependencies]
 color = ["colorama"]
-dev = ["pytest-cov", "wcwidth"]
+dev = ["pytest-cov", "wcwidth", "prompt-toolkit"]
 prompt-toolkit = ["prompt-toolkit", "platformdirs"]
 ptpython = ["ptpython", "platformdirs"]
 
