@@ -74,7 +74,11 @@ class BasicKeyEnum(Enum):
         :type name: str
         :rtype: Self
         """
-        return cls(key_map[name])
+        return cls(
+            key_map[
+                ("_" if name in "".join(map(str, range(10))) else "") + name
+            ]
+        )
 
     @classmethod
     def from_pt_name(cls, name: str) -> Self:
