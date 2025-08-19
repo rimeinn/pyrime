@@ -1,5 +1,7 @@
 r"""Draw UI
 ===========
+
+A function to draw UI of IME.
 """
 
 from dataclasses import dataclass

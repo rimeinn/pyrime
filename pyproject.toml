@@ -7,8 +7,8 @@ name = "pyrime"
 dynamic = ["version"]
 description = "rime for python, attached to prompt-toolkit keybindings for some prompt-toolkit applications such as ptpython"
 readme = "README.md"
-# type_a | type_b
-requires-python = ">= 3.10"
+# Self
+requires-python = ">= 3.11"
 keywords = ["rime", "ptpython", "prompt-toolkit"]
 classifiers = [
   "Development Status :: 3 - Alpha",
@@ -21,9 +21,9 @@ classifiers = [
   "Operating System :: MacOS",
   "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]

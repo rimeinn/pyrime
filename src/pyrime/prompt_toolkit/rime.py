@@ -20,15 +20,6 @@ from wcwidth import wcswidth
 
 from ..__main__ import Traits
 from ..draw_ui import UI, draw_ui
-from ..parse_key import (
-    ALT_SHIFT_CR,
-    CONTROL_ALT_CR,
-    CONTROL_ALT_SHIFT_CR,
-    CONTROL_CR,
-    CONTROL_SHIFT_CR,
-    SHIFT_CR,
-    parse_keys,
-)
 from ..rime import (
     clear_composition,
     commit_composition,
@@ -39,6 +30,7 @@ from ..rime import (
     process_key,
 )
 from . import RimeBase
+from .terminfo import Key, ModifierKey
 
 
 @dataclass
@@ -70,12 +62,36 @@ class Rime(RimeBase):
                 ("s-tab",),
                 ("s-escape",),
                 ("escape", "backspace"),
-                tuple(SHIFT_CR),
-                tuple(ALT_SHIFT_CR),
-                tuple(CONTROL_CR),
-                tuple(CONTROL_SHIFT_CR),
-                tuple(CONTROL_ALT_CR),
-                tuple(CONTROL_ALT_SHIFT_CR),
+                ("escape", "enter"),
+                tuple(
+                    Key.new("enter", ModifierKey.Shift).get_prompt_toolkit()
+                ),
+                tuple(
+                    Key.new("enter", ModifierKey.Control).get_prompt_toolkit()
+                ),
+                tuple(
+                    Key.new(
+                        "enter", ModifierKey.Shift | ModifierKey.Control
+                    ).get_prompt_toolkit()
+                ),
+                tuple(
+                    Key.new(
+                        "enter", ModifierKey.Shift | ModifierKey.Alt
+                    ).get_prompt_toolkit()
+                ),
+                tuple(
+                    Key.new(
+                        "enter", ModifierKey.Control | ModifierKey.Alt
+                    ).get_prompt_toolkit()
+                ),
+                tuple(
+                    Key.new(
+                        "enter",
+                        ModifierKey.Shift
+                        | ModifierKey.Control
+                        | ModifierKey.Alt,
+                    ).get_prompt_toolkit()
+                ),
             }
             for order in range(ord(" "), ord("~") + 1):
                 self.keys_set |= {(chr(order),)}
@@ -156,7 +172,9 @@ class Rime(RimeBase):
         :rtype: str
         """
         if commit_composition(self.session_id):
-            return get_commit(self.session_id).text
+            commit = get_commit(self.session_id)
+            if commit:
+                return commit.text
         return ""
 
     def draw(self, keys: list[str]) -> tuple[str, list[str], int]:
@@ -166,12 +184,12 @@ class Rime(RimeBase):
         :type keys: list[str]
         :rtype: tuple[str, list[str], int]
         """
-        if not process_key(self.session_id, *parse_keys(keys)):
+        if not process_key(self.session_id, *Key.new(keys).get_rime()):
             if len(keys) == 1 == len(keys[0]):
                 return keys[0], [self.ui.cursor], 0
             return "", [self.ui.cursor], 0
         context = get_context(self.session_id)
-        if context.menu.num_candidates == 0:
+        if context is None or context.menu.num_candidates == 0:
             return self.get_commit_text(), [self.ui.cursor], 0
         lines, col = draw_ui(context, self.ui)
         return "", lines, col

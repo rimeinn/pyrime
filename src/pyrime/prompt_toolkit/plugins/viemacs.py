@@ -17,6 +17,7 @@ from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 from prompt_toolkit.key_binding.vi_state import InputMode
 from prompt_toolkit.selection import SelectionType
 
+from ..terminfo import Key, ModifierKey
 from . import RimeBase
 
 
@@ -174,3 +175,44 @@ def viemacs(rime: RimeBase) -> None:
         )
         buffer.delete(count=buffer.document.get_end_of_line_position())
         rime.conditional_enable()
+
+    @repl.add_key_binding(
+        *Key.new("enter", ModifierKey.Shift).get_prompt_toolkit(),
+        filter=rime.filter(),
+    )
+    @repl.add_key_binding(
+        *Key.new("enter", ModifierKey.Control).get_prompt_toolkit(),
+        filter=rime.filter(),
+    )
+    @repl.add_key_binding(
+        *Key.new(
+            "enter", ModifierKey.Control | ModifierKey.Shift
+        ).get_prompt_toolkit(),
+        filter=rime.filter(),
+    )
+    @repl.add_key_binding(
+        *Key.new(
+            "enter", ModifierKey.Shift | ModifierKey.Alt
+        ).get_prompt_toolkit(),
+        filter=rime.filter(),
+    )
+    @repl.add_key_binding(
+        *Key.new(
+            "enter", ModifierKey.Control | ModifierKey.Alt
+        ).get_prompt_toolkit(),
+        filter=rime.filter(),
+    )
+    @repl.add_key_binding(
+        *Key.new(
+            "enter", ModifierKey.Control | ModifierKey.Shift | ModifierKey.Alt
+        ).get_prompt_toolkit(),
+        filter=rime.filter(),
+    )
+    def _(event: KeyPressEvent) -> None:
+        """`<https://github.com/prompt-toolkit/python-prompt-toolkit/issues/2006>_`
+
+        :param event:
+        :type event: KeyPressEvent
+        :rtype: None
+        """
+        event.current_buffer.validate_and_handle()
