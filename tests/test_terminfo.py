@@ -13,7 +13,7 @@ class Test:
         :rtype: None
         """
         key = Key.new(["c-^"])
-        assert key.basic == ord("6")
+        assert key.basic.value == ord("6")
         assert key.modifier == ModifierKey.Control
 
     @staticmethod
