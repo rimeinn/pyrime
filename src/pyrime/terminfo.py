@@ -18,7 +18,7 @@ their intersection.
 import json
 import os
 from dataclasses import dataclass
-from enum import Flag, unique
+from enum import Enum, Flag, unique
 from typing import Self
 
 from prompt_toolkit.keys import KEY_ALIASES, Keys
@@ -28,7 +28,10 @@ with open(os.path.join(json_dir, "keys.json")) as f:
     key_map: dict[str, int] = json.load(f)
 with open(os.path.join(json_dir, "modifiers.json")) as f:
     modifiers: list = json.load(f)
-
+key_map = {
+    ("_" if k in "".join(map(str, range(10))) else "") + k: v
+    for k, v in key_map.items()
+}
 name_map = {
     "Enter": "Return",
     "Pageup": "Page_Up",
@@ -39,40 +42,75 @@ template_map = {
 }
 
 
-class BasicKey:
-    r"""Basickey.
-    Convert key code/name/template.
-    """
+class BasicKeyEnum(Enum):
+    r"""BasickeyEnum."""
 
-    def __init__(self, name_or_value: str | int) -> None:
-        r"""Init.
+    def get_rime_name(self) -> str:
+        r"""Get rime name.
 
-        :param name_or_value:
-        :type name_or_value: str | int
-        :rtype: None
+        :rtype: str
         """
-        self.value = -1
-        self.pt_name = ""
-        self.template = None
-        if isinstance(name_or_value, int):
-            self.value = name_or_value
-            self.rime_name = {v: k for k, v in key_map.items()}[self.value]
-        elif "{}" in name_or_value:
-            self.template = name_or_value
-            self.rime_name = {v: k for k, v in template_map.items()}[
-                self.template
-            ]
-        elif name_or_value[0].isupper():
-            self.rime_name = name_or_value
-        else:
-            self.pt_name = name_or_value
-            self.rime_name = self.pt_to_rime(self.pt_name)
-        if self.value == -1:
-            self.value = key_map[self.rime_name]
-        if self.pt_name == "":
-            self.pt_name = self.rime_to_pt(self.rime_name)
-        if self.template is None:
-            self.template = template_map.get(self.rime_name)
+        return {v: k for k, v in key_map.items()}[self.value].lstrip("_")
+
+    def get_pt_name(self) -> str:
+        r"""Get pt name.
+
+        :rtype: str
+        """
+        return self.rime_to_pt(self.get_rime_name())
+
+    def get_template(self) -> str | None:
+        r"""Get template.
+
+        :rtype: str | None
+        """
+        return template_map.get(self.get_rime_name())
+
+    @classmethod
+    def from_rime_name(cls, name: str) -> Self:
+        r"""From rime name.
+
+        :param name:
+        :type name: str
+        :rtype: Self
+        """
+        return cls(key_map[name])
+
+    @classmethod
+    def from_pt_name(cls, name: str) -> Self:
+        r"""From pt name.
+
+        :param name:
+        :type name: str
+        :rtype: Self
+        """
+        name = cls.pt_to_rime(name)
+        return cls.from_rime_name(name)
+
+    @classmethod
+    def from_template(cls, template: str) -> Self:
+        r"""From template.
+
+        :param template:
+        :type template: str
+        :rtype: Self
+        """
+        name = {v: k for k, v in template_map.items()}[template]
+        return cls.from_rime_name(name)
+
+    @classmethod
+    def new(cls, name_or_template: str) -> Self:
+        r"""New.
+
+        :param name_or_template:
+        :type name_or_template: str
+        :rtype: Self
+        """
+        if "{}" in name_or_template:
+            return cls.from_template(name_or_template)
+        elif name_or_template[0].isupper():
+            return cls.from_rime_name(name_or_template)
+        return cls.from_pt_name(name_or_template)
 
     @staticmethod
     def rime_to_pt(name: str) -> str:
@@ -105,6 +143,9 @@ class BasicKey:
         if name in key_map:
             return name
         raise NotImplementedError
+
+
+BasicKey = BasicKeyEnum("BasicKey", key_map)
 
 
 @unique
@@ -146,12 +187,20 @@ class ModifierKey(Flag):
         return value
 
     def format(self, template: str) -> str:
+        r"""Format.
+
+        :param template:
+        :type template: str
+        :rtype: str
+        """
         return template.format(self.get_ansi())
 
 
 @dataclass
 class Key:
-    basic: int
+    r"""Key."""
+
+    basic: BasicKey
     modifier: ModifierKey
 
     def get_rime(self) -> tuple[int, int]:
@@ -160,7 +209,7 @@ class Key:
         :param self:
         :rtype: tuple[int, int]
         """
-        return self.basic, self.modifier.value
+        return self.basic.value, self.modifier.value
 
     @classmethod
     def new(
@@ -180,7 +229,11 @@ class Key:
         if isinstance(code_or_keys, list):
             return cls.from_prompt_toolkit(code_or_keys)
         else:
-            return cls(BasicKey(code_or_keys).value, modifier)
+            if isinstance(code_or_keys, int):
+                basic = BasicKey(code_or_keys)
+            else:
+                basic = BasicKey.new(code_or_keys)
+            return cls(basic, modifier)
 
     @classmethod
     def from_rime(cls, code: int, mask: int) -> Self:
@@ -193,7 +246,7 @@ class Key:
         :type mask: int
         :rtype: Self
         """
-        return cls(code, ModifierKey(mask))
+        return cls(BasicKey(code), ModifierKey(mask))
 
     def get_prompt_toolkit(self) -> list[Keys | str]:
         r"""Get prompt-toolkit key name.
@@ -202,13 +255,13 @@ class Key:
         :rtype: list[Keys | str]
         """
         keys = []
-        basic = BasicKey(self.basic)
-        if basic.template:
-            keys = list(self.modifier.format(basic.template))
+        template = self.basic.get_template()
+        if template:
+            keys = list(self.modifier.format(template))
             if keys[0] == "\x1b":
                 keys[0] = "escape"
         else:
-            name = basic.pt_name
+            name = self.basic.get_pt_name()
             for modifier in self.modifier:
                 if modifier == ModifierKey.Alt:
                     keys += ["escape"]
@@ -249,10 +302,10 @@ class Key:
             if name.startswith("s-"):
                 modifier |= ModifierKey.Shift
                 _, _, name = name.partition("s-")
-            basic = BasicKey(name).value
+            basic = BasicKey.new(name)
         else:
             prefix, _, suffix = name.partition(";")
             modifier |= ModifierKey.from_ansi(int(suffix[0]))
             name = prefix + _ + "{}" + suffix[1:]
-            basic = BasicKey(name).value
+            basic = BasicKey.new(name)
         return cls(basic, modifier)
