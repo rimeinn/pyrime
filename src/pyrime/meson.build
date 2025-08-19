@@ -35,7 +35,6 @@ py.install_sources(
     'rime.pyi',
     'py.typed',
     '__main__.py',
-    'parse_key.py',
     'draw_ui.py',
   ],
   subdir: 'pyrime',
@@ -45,6 +44,7 @@ py.install_sources(
     'prompt_toolkit/__init__.py',
     'prompt_toolkit/rime.py',
     'prompt_toolkit/gdb.py',
+    'prompt_toolkit/terminfo.py',
   ],
   subdir: 'pyrime/prompt_toolkit',
 )
