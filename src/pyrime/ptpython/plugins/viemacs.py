@@ -18,10 +18,10 @@ from prompt_toolkit.key_binding.vi_state import InputMode
 from prompt_toolkit.selection import SelectionType
 
 from ...terminfo import Key, ModifierKey
-from . import RimeBase
+from . import IME
 
 
-def viemacs(rime: RimeBase) -> None:
+def viemacs(rime: IME) -> None:
     repl = rime.repl
 
     @repl.add_key_binding("escape", filter=EmacsInsertMode())  # type: ignore

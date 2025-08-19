@@ -14,8 +14,8 @@ from ptpython.repl import PythonRepl
 
 
 @dataclass
-class RimeBase:
-    r"""RimeBase."""
+class IME:
+    r"""IME."""
 
     repl: PythonRepl
     preedit: str = ""

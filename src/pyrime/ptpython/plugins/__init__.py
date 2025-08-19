@@ -2,9 +2,9 @@ r"""Plugins
 ===========
 """
 
-from .. import RimeBase
+from .. import IME
 
 try:
-    from ..rime import Rime
+    from ..rime import RIME
 except ImportError:
-    Rime = RimeBase
+    RIME = IME

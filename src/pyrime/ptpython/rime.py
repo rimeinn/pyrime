@@ -15,33 +15,20 @@ from prompt_toolkit.layout.containers import (
 from prompt_toolkit.layout.controls import BufferControl
 from prompt_toolkit.layout.layout import Layout
 from prompt_toolkit.widgets import Frame
-from ptpython.repl import PythonRepl
 from wcwidth import wcswidth
 
 from ..__main__ import Traits
 from ..draw_ui import UI, draw_ui
-from ..rime import (
-    clear_composition,
-    commit_composition,
-    create_session,
-    get_commit,
-    get_context,
-    init,
-    process_key,
-)
+from ..rime import Rime
 from ..terminfo import Key, ModifierKey
-from . import RimeBase
+from . import IME
 
 
 @dataclass
-class Rime(RimeBase):
-    r"""Rime."""
+class RIME(IME, Rime):
+    r"""RIME."""
 
-    repl: PythonRepl
-    session_id: int = 0
-    is_enabled: bool = False
     remember_rime: bool = False
-    preedit: str = ""
     window: Window = None  # type: ignore
     layout: Layout | None = None
     traits: Traits = None  # type: ignore
@@ -166,17 +153,6 @@ class Rime(RimeBase):
         self.repl.app.layout.container.floats[0].left = left  # type: ignore
         self.repl.app.layout.container.floats[0].top = top  # type: ignore
 
-    def get_commit_text(self) -> str:
-        r"""Get commit text.
-
-        :rtype: str
-        """
-        if commit_composition(self.session_id):
-            commit = get_commit(self.session_id)
-            if commit:
-                return commit.text
-        return ""
-
     def draw(self, keys: list[str]) -> tuple[str, list[str], int]:
         r"""Draw.
 
@@ -184,11 +160,11 @@ class Rime(RimeBase):
         :type keys: list[str]
         :rtype: tuple[str, list[str], int]
         """
-        if not process_key(self.session_id, *Key.new(keys).get_rime()):
+        if not self.process_key(*Key.new(keys).get_rime()):
             if len(keys) == 1 == len(keys[0]):
                 return keys[0], [self.ui.cursor], 0
             return "", [self.ui.cursor], 0
-        context = get_context(self.session_id)
+        context = self.get_context()
         if context is None or context.menu.num_candidates == 0:
             return self.get_commit_text(), [self.ui.cursor], 0
         lines, col = draw_ui(context, self.ui)
@@ -209,7 +185,7 @@ class Rime(RimeBase):
         self.swap_layout()
         self.is_enabled = False
         self.preedit = ""
-        clear_composition(self.session_id)
+        self.clear_composition()
 
     def calculate(self) -> tuple[int, int]:
         r"""Calculate.
@@ -230,22 +206,15 @@ class Rime(RimeBase):
             left += wcswidth(lines[-1])
         return left, top
 
-    def init_(self) -> None:
-        r"""Init.
-
-        :rtype: None
-        """
-        if self.session_id == 0:
-            os.makedirs(self.traits.log_dir, exist_ok=True)
-            init(**vars(self.traits))
-            self.session_id = create_session()
-
     def enable(self) -> None:
         r"""Enable.
 
         :rtype: None
         """
-        self.init_()
+        if self.session_id == 0:
+            os.makedirs(self.traits.log_dir, exist_ok=True)
+            self.init(self.traits)
+            self.session_id = self.create_session()
         left, top = self.calculate()
         self.window = Window(
             BufferControl(buffer=Buffer()),

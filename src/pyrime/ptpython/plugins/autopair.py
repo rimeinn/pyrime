@@ -13,10 +13,10 @@ from prompt_toolkit.key_binding.bindings.named_commands import (
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 
 from ..utils.condition import InsertMode
-from . import RimeBase
+from . import IME
 
 
-def autopair(rime: RimeBase) -> None:
+def autopair(rime: IME) -> None:
     r"""Autopair.
 
     :param rime:

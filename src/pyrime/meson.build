@@ -22,7 +22,7 @@ py.extension_module(
   'rime',
   [
     # https://github.com/mesonbuild/meson/issues/8693#issuecomment-2511060673
-    configure_file(input: 'rime.pyi', output: 'rime.pyx', copy: true),
+    configure_file(input: '_C.pyi', output: '_C.pyx', copy: true),
   ],
   dependencies: deps,
   subdir: 'pyrime',
@@ -32,7 +32,8 @@ py.extension_module(
 py.install_sources(
   [
     configure_file(input: '__init__.py', output: '__init__.py', configuration: conf_data),
-    'rime.pyi',
+    '_C.pyi',
+    'rime.py',
     'py.typed',
     '__main__.py',
     'draw_ui.py',
