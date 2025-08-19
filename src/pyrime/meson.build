@@ -36,36 +36,36 @@ py.install_sources(
     'py.typed',
     '__main__.py',
     'draw_ui.py',
+    'terminfo.py',
   ],
   subdir: 'pyrime',
 )
 py.install_sources(
   [
-    'prompt_toolkit/__init__.py',
-    'prompt_toolkit/rime.py',
-    'prompt_toolkit/gdb.py',
-    'prompt_toolkit/terminfo.py',
+    'ptpython/__init__.py',
+    'ptpython/rime.py',
+    'ptpython/gdb.py',
   ],
-  subdir: 'pyrime/prompt_toolkit',
+  subdir: 'pyrime/ptpython',
 )
 py.install_sources(
   [
-    'prompt_toolkit/utils/condition.py',
-    'prompt_toolkit/utils/ansi.py',
-    'prompt_toolkit/utils/insert.py',
-    'prompt_toolkit/utils/prompt_style.py',
+    'ptpython/utils/condition.py',
+    'ptpython/utils/ansi.py',
+    'ptpython/utils/insert.py',
+    'ptpython/utils/prompt_style.py',
   ],
-  subdir: 'pyrime/prompt_toolkit/utils',
+  subdir: 'pyrime/ptpython/utils',
 )
 py.install_sources(
   [
-    'prompt_toolkit/plugins/__init__.py',
-    'prompt_toolkit/plugins/autopair.py',
-    'prompt_toolkit/plugins/autosuggestion.py',
-    'prompt_toolkit/plugins/smartinput.py',
-    'prompt_toolkit/plugins/viemacs.py',
+    'ptpython/plugins/__init__.py',
+    'ptpython/plugins/autopair.py',
+    'ptpython/plugins/autosuggestion.py',
+    'ptpython/plugins/smartinput.py',
+    'ptpython/plugins/viemacs.py',
   ],
-  subdir: 'pyrime/prompt_toolkit/plugins',
+  subdir: 'pyrime/ptpython/plugins',
 )
 py.install_sources(
   ['assets/json/keys.json', 'assets/json/modifiers.json'],

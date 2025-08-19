@@ -10,12 +10,8 @@ import sys
 from argparse import Namespace
 
 import gdb  # type: ignore
-from ptpython.entry_points.run_ptpython import (
-    PythonRepl,
-    get_config_and_history_file,
-    run_config,
-)
-from ptpython.repl import embed
+from ptpython.entry_points.run_ptpython import get_config_and_history_file
+from ptpython.repl import PythonRepl, embed, run_config
 
 import __main__
 
@@ -33,7 +29,7 @@ class PtPythonCommand(gdb.Command):
         if os.path.exists(self.config_file):
             run_config(repl, self.config_file)
 
-    def invoke(self, arg: str, from_tty: bool):
+    def invoke(self, argument: str, from_tty: bool):
         self.dont_repeat()
 
         if not from_tty:

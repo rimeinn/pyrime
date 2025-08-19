@@ -27,12 +27,13 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
+dependencies = ["platformdirs"]
 
 [project.optional-dependencies]
 color = ["colorama"]
 dev = ["pytest-cov", "wcwidth", "prompt-toolkit"]
-prompt-toolkit = ["prompt-toolkit", "platformdirs"]
-ptpython = ["ptpython", "platformdirs"]
+prompt-toolkit = ["prompt-toolkit"]
+ptpython = ["ptpython"]
 
 [[project.authors]]
 name = "Wu, Zhenyu"

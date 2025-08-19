@@ -29,8 +29,8 @@ from ..rime import (
     init,
     process_key,
 )
+from ..terminfo import Key, ModifierKey
 from . import RimeBase
-from .terminfo import Key, ModifierKey
 
 
 @dataclass

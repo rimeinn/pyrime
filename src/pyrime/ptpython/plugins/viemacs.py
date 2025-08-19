@@ -17,7 +17,7 @@ from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 from prompt_toolkit.key_binding.vi_state import InputMode
 from prompt_toolkit.selection import SelectionType
 
-from ..terminfo import Key, ModifierKey
+from ...terminfo import Key, ModifierKey
 from . import RimeBase
 
 

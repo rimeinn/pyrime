@@ -1,6 +1,6 @@
 r"""Test terminfo."""
 
-from pyrime.prompt_toolkit.terminfo import Key, ModifierKey
+from pyrime.terminfo import Key, ModifierKey
 
 
 class Test:
