@@ -76,11 +76,11 @@ pacboy -S --noconfirm pkg-config librime gcc
 from ptpython.repl import PythonRepl
 from prompt_toolkit.filters import EmacsInsertMode, ViInsertMode
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
-from pyrime.ptpython.plugins import Rime
+from pyrime.ptpython.plugins import RIME
 
 
 def configure(repl: PythonRepl) -> None:
-    rime = Rime(repl)
+    rime = RIME(repl)
 
     @repl.add_key_binding("c-^", filter=ViInsertMode())
     @repl.add_key_binding("c-^", filter=EmacsInsertMode())
