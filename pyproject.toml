@@ -91,18 +91,20 @@ exclude_lines = [
 
 [tool.cibuildwheel]
 archs = ["all"]
-# CentOS 7 doesn't have librime-dev
-build = "*-musllinux_* *-macosx_*"
 # https://github.com/mesonbuild/meson-python/discussions/751
 # meson doesn't support universal2
 # ERROR: Dependency lookup for rime with method 'pkgconfig' failed: Pkg-config for machine host machine not found. Giving up.
-skip = "*37-* *38-* *39-* *_universal2 *-macosx_x86_64"
+skip = "*37-* *38-* *39-* *_universal2 *-macosx_x86_64 *-win*"
 build-frontend = "build[uv]"
 before-test = "pip install .[dev]"
 test-command = "pytest {project}"
 
 [tool.cibuildwheel.environment]
 MACOSX_DEPLOYMENT_TARGET = "14.0"
+
+[[tool.cibuildwheel.overrides]]
+select = ["*-manylinux_*"]
+before-all = "yum add librime"
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_*"]

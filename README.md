@@ -76,7 +76,7 @@ pacboy -S --noconfirm pkg-config librime gcc
 from ptpython.repl import PythonRepl
 from prompt_toolkit.filters import EmacsInsertMode, ViInsertMode
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
-from pyrime.prompt_toolkit.rime import Rime
+from pyrime.ptpython.plugins import Rime
 
 
 def configure(repl: PythonRepl) -> None:
