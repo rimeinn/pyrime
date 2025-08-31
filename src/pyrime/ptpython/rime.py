@@ -1,5 +1,8 @@
-r"""Prompt Toolkit
-==================
+r"""Rime for Ptpython
+=====================
+
+``RIME`` inherits ``pyrime.ptpython``'s ``IME`` and ``pyrime.rime``'s ``Rime``
+to use ``Rime``s OOP APIs to call librime on the basis of ``IME``.
 """
 
 import os
@@ -26,7 +29,7 @@ from . import IME
 
 @dataclass
 class RIME(IME, Rime):
-    r"""RIME."""
+    r"""RIME inherit IME and Rime."""
 
     remember_rime: bool = False
     window: Window = None  # type: ignore

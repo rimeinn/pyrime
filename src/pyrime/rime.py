@@ -22,7 +22,7 @@ from ._C import (
 
 @dataclass
 class Rime:
-    r"""Rime."""
+    r"""Rime is a class to provide OOP APIs for librime."""
 
     session_id: int = 0
 

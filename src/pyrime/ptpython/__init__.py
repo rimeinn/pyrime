@@ -1,10 +1,9 @@
-r"""Prompt Toolkit
-==================
+r"""Ptpython
+============
 
-gdb's python cannot source binary python module.
-
-When ``pyrime.prompt_toolkit.rime`` cannot be imported, ``RimeBase`` will
-provide a support for ``pyrime.prompt_toolkit.plugins``.
+``ptpython`` use a multi mode editor with emacs, vi insert, vi normal modes,
+... So we must know current edit mode to decide how to handle key inputs.
+``IME`` provide a skeleton for it.
 """
 
 from dataclasses import dataclass
@@ -15,7 +14,7 @@ from ptpython.repl import PythonRepl
 
 @dataclass
 class IME:
-    r"""IME."""
+    r"""IME is a class to provide basic support for ``ptpython``."""
 
     repl: PythonRepl
     preedit: str = ""

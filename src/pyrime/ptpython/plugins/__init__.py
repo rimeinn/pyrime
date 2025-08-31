@@ -1,5 +1,8 @@
 r"""Plugins
 ===========
+
+In some python environments such as ``gdb``, 3rd binary python module cannot be
+imported. Use ``IME`` to replace ``RIME``.
 """
 
 from .. import IME
