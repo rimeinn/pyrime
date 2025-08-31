@@ -112,7 +112,7 @@ MACOSX_DEPLOYMENT_TARGET = "15.0"
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-manylinux_*"]
-before-all = "yum install librime"
+before-all = "yum -y install librime"
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_*"]
