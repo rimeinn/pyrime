@@ -100,11 +100,11 @@ before-test = "pip install .[dev]"
 test-command = "pytest {project}"
 
 [tool.cibuildwheel.environment]
-MACOSX_DEPLOYMENT_TARGET = "14.0"
+MACOSX_DEPLOYMENT_TARGET = "15.0"
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-manylinux_*"]
-before-all = "yum add librime"
+before-all = "yum install librime"
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_*"]
