@@ -1,3 +1,3 @@
-project('pyrime', 'cython', 'c', version: '0.0.12')
+project('pyrime', 'cython', 'c', version: '0.0.13')
 
 subdir('src/pyrime')
