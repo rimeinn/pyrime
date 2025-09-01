@@ -9,10 +9,10 @@ mkShell {
     librime
 
     pkg-config
+    uv
 
     (python3.withPackages (
       p: with p; [
-        uv
         pytest
 
         meson-python
