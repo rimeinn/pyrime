@@ -111,11 +111,11 @@ manylinux-pypy_aarch64-image = "manylinux_2_28"
 MACOSX_DEPLOYMENT_TARGET = "15.0"
 
 [[tool.cibuildwheel.overrides]]
-select = ["*-manylinux_2_28"]
+select = ["*-manylinux_*"]
 before-all = "yum -y install librime-devel"
 
 [[tool.cibuildwheel.overrides]]
-select = ["*-manylinux_2_39"]
+select = ["*-manylinux_armv7l"]
 before-all = "apt-get -y install librime-dev"
 
 [[tool.cibuildwheel.overrides]]
