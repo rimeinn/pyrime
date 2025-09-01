@@ -28,7 +28,7 @@ from . import IME
 
 
 @dataclass
-class RIME(IME, Rime):
+class RIME(Rime, IME):
     r"""RIME inherit IME and Rime."""
 
     remember_rime: bool = False
