@@ -19,7 +19,7 @@ header_path = run_command('pkg-config', '--variable=includedir', 'rime', check: 
 configure_file(command: ['autopxd', header_path, 'rime_api.pxd'], output: 'rime_api.pxd')
 
 py.extension_module(
-  'rime',
+  '_C',
   [
     # https://github.com/mesonbuild/meson/issues/8693#issuecomment-2511060673
     configure_file(input: '_C.pyi', output: '_C.pyx', copy: true),
