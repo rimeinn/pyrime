@@ -77,14 +77,19 @@ from ptpython.repl import PythonRepl
 from prompt_toolkit.filters import EmacsInsertMode, ViInsertMode
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 from pyrime.ptpython.plugins import RIME
+from pyrime.ptpython.utils.condition import (
+    InsertMode,
+    any_condition,
+)
 
 
 def configure(repl: PythonRepl) -> None:
     rime = RIME(repl)
 
-    @repl.add_key_binding("c-^", filter=ViInsertMode())
-    @repl.add_key_binding("c-^", filter=EmacsInsertMode())
-    @repl.add_key_binding("c-^", filter=rime.mode())
+    @repl.add_key_binding(
+        "c-^",
+        filter=any_condition(InsertMode, rime.mode(["c-^"])),
+    )
     def _(event: KeyPressEvent) -> None:
         rime.toggle()
 ```
