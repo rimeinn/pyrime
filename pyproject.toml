@@ -94,7 +94,8 @@ archs = ["all"]
 # https://github.com/mesonbuild/meson-python/discussions/751
 # meson doesn't support universal2
 # ERROR: Dependency lookup for rime with method 'pkgconfig' failed: Pkg-config for machine host machine not found. Giving up.
-skip = "*37-* *38-* *39-* *_universal2 *-macosx_x86_64 *-win*"
+# Almalinux 8's librime 1.3 is too old
+skip = "*37-* *38-* *39-* *_universal2 *-macosx_x86_64 *-win* *-manylinux_*"
 build-frontend = "build[uv]"
 before-test = "pip install .[dev]"
 test-command = "pytest {project}"
@@ -103,9 +104,6 @@ manylinux-i686-image = "manylinux_2_28"
 manylinux-aarch64-image = "manylinux_2_28"
 manylinux-ppc64le-image = "manylinux_2_28"
 manylinux-s390x-image = "manylinux_2_28"
-manylinux-pypy_x86_64-image = "manylinux_2_28"
-manylinux-pypy_i686-image = "manylinux_2_28"
-manylinux-pypy_aarch64-image = "manylinux_2_28"
 
 [tool.cibuildwheel.environment]
 MACOSX_DEPLOYMENT_TARGET = "15.0"

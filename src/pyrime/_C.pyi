@@ -28,7 +28,7 @@ def init(
     app_name: str = "rime.pyrime",
     min_log_level: int = 3,
 ) -> None:
-    r"""Init. Ignore ``min_log_level`` and ``log_dir`` for librime 1.3.
+    r"""Init.
 
     :param shared_data_dir:
     :type shared_data_dir: str
@@ -56,8 +56,8 @@ def init(
         distribution_code_name=distribution_code_name.encode(),
         distribution_version=distribution_version.encode(),
         app_name=app_name.encode(),
-        # min_log_level=_min_log_level,
-        # log_dir=log_dir.encode(),
+        min_log_level=_min_log_level,
+        log_dir=log_dir.encode(),
     )
     traits.data_size = c.sizeof(RimeTraits) - c.sizeof(traits.data_size)
     global rime

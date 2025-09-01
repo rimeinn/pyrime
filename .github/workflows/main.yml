@@ -21,50 +21,54 @@ env:
 
 jobs:
   # windows doesn't use cibuildwheel
-  # E   ImportError: DLL load failed while importing pyrime:
-  # The specified module could not be found.
-  # test:
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       include:
-  #         - runs-on: windows-latest
-  #           shell: msys2
-  #   defaults:
-  #     run:
-  #       shell: ${{matrix.shell}} {0}
-  #   runs-on: ${{matrix.runs-on}}
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: msys2/setup-msys2@v2
-  #       if: runner.os == 'Windows'
-  #     - name: Install dependencies
-  #       if: runner.os == 'Windows'
-  #       run: |
-  #         pacman -Sy --noconfirm mingw-w64-x86_64-pkg-config \
-  #         mingw-w64-x86_64-librime mingw-w64-x86_64-python-pip \
-  #         mingw-w64-x86_64-ninja mingw-w64-x86_64-gcc
-  #     - name: Install dependencies
-  #       if: runner.os == 'Linux'
-  #       run: |
-  #         sudo apt-get -y update
-  #         sudo apt-get -y install librime-dev
-  #     - uses: actions/setup-python@v5
-  #       with:
-  #         python-version: ${{env.python-version}}
-  #         cache: ${{env.cache}}
-  #     - name: Test
-  #       run: |
-  #         pip install .[dev]
-  #         pytest --cov
-  #     - uses: codecov/codecov-action@v4
-
-  build-wheels:
-    # needs: test
+  test:
     strategy:
       fail-fast: false
       matrix:
         include:
+          # E   ImportError: DLL load failed while importing pyrime:
+          # The specified module could not be found.
+          # - runs-on: windows-latest
+          #   shell: msys2
+          - runs-on: ubuntu-latest
+            shell: bash
+    defaults:
+      run:
+        shell: ${{matrix.shell}} {0}
+    runs-on: ${{matrix.runs-on}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        if: runner.os == 'Windows'
+      - name: Install dependencies
+        if: runner.os == 'Windows'
+        run: |
+          pacman -Sy --noconfirm mingw-w64-x86_64-pkg-config \
+          mingw-w64-x86_64-librime mingw-w64-x86_64-python-pip \
+          mingw-w64-x86_64-ninja mingw-w64-x86_64-gcc
+      - name: Install dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get -y update
+          sudo apt-get -y install librime-dev
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{env.python-version}}
+          cache: ${{env.cache}}
+      - name: Test
+        run: |
+          pip install .[dev]
+          pytest --cov
+      - uses: codecov/codecov-action@v4
+
+  build-wheels:
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runs-on: ubuntu-latest
+            shell: bash
           - runs-on: windows-latest
             shell: msys2
     defaults:
