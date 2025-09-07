@@ -125,7 +125,7 @@ jobs:
         with:
           python-version: ${{env.python-version}}
           cache: ${{env.cache}}
-      - uses: pypa/cibuildwheel@v2.23
+      - uses: pypa/cibuildwheel@v3.1
       - uses: actions/upload-artifact@v4
         with:
           name: artifact-${{matrix.runs-on}}
