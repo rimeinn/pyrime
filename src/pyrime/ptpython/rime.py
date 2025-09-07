@@ -9,6 +9,7 @@ import os
 from dataclasses import dataclass
 
 from prompt_toolkit.buffer import Buffer
+from prompt_toolkit.filters import Condition
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 from prompt_toolkit.layout.containers import (
     Float,
@@ -133,6 +134,30 @@ class RIME(Rime, IME):
                 :rtype: None
                 """
                 self.key_binding(event, keys)
+
+    def mode(self, keys: list[str]) -> Condition:
+        r"""Mode.
+
+        :param keys:
+        :type keys: list[str]
+        :rtype: Condition
+        """
+
+        @Condition
+        def _(keys: list[str] = keys) -> bool:
+            r""".
+
+            :param keys:
+            :type keys: list[str]
+            :rtype: bool
+            """
+            if len(keys) == 1 == len(keys[0]):
+                return self.is_enabled
+            if len(keys) == 1 or len(keys) > 1 and keys[0] == "escape":
+                return self.preedit != ""
+            raise NotImplementedError
+
+        return _
 
     def key_binding(self, event: KeyPressEvent, keys: list[str]) -> None:
         r"""Key binding.

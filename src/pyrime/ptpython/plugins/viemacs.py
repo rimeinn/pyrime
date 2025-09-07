@@ -1,7 +1,7 @@
 r"""Viemacs
 ===========
 
-Use ``EmacsInsertMode()`` to replace ``ViInsertMode()``
+Use ``emacs_insert_mode`` to replace ``vi_insert_mode``
 
 Refer `vim-rsi <https://github.com/tpope/vim-rsi>`_.
 """
@@ -9,10 +9,9 @@ Refer `vim-rsi <https://github.com/tpope/vim-rsi>`_.
 from prompt_toolkit.clipboard import ClipboardData
 from prompt_toolkit.enums import EditingMode
 from prompt_toolkit.filters import (
-    EmacsInsertMode,
-    ViNavigationMode,
     in_paste_mode,
 )
+from prompt_toolkit.filters.app import emacs_insert_mode, vi_navigation_mode
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 from prompt_toolkit.key_binding.vi_state import InputMode
 from prompt_toolkit.selection import SelectionType
@@ -24,7 +23,7 @@ from . import IME
 def viemacs(rime: IME) -> None:
     repl = rime.repl
 
-    @repl.add_key_binding("escape", filter=EmacsInsertMode())  # type: ignore
+    @repl.add_key_binding("escape", filter=emacs_insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -36,7 +35,7 @@ def viemacs(rime: IME) -> None:
         event.app.vi_state.input_mode = InputMode.NAVIGATION
         rime.conditional_disable()
 
-    @repl.add_key_binding("i", filter=ViNavigationMode())  # type: ignore
+    @repl.add_key_binding("i", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -48,7 +47,7 @@ def viemacs(rime: IME) -> None:
         event.app.vi_state.input_mode = InputMode.INSERT
         rime.conditional_enable()
 
-    @repl.add_key_binding("a", filter=ViNavigationMode())  # type: ignore
+    @repl.add_key_binding("a", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -63,7 +62,7 @@ def viemacs(rime: IME) -> None:
         )
         rime.conditional_enable()
 
-    @repl.add_key_binding("I", filter=ViNavigationMode())  # type: ignore
+    @repl.add_key_binding("I", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -80,7 +79,7 @@ def viemacs(rime: IME) -> None:
         )
         rime.conditional_enable()
 
-    @repl.add_key_binding("A", filter=ViNavigationMode())  # type: ignore
+    @repl.add_key_binding("A", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -95,7 +94,7 @@ def viemacs(rime: IME) -> None:
         )
         rime.conditional_enable()
 
-    @repl.add_key_binding("o", filter=ViNavigationMode())  # type: ignore
+    @repl.add_key_binding("o", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -108,7 +107,7 @@ def viemacs(rime: IME) -> None:
         event.current_buffer.insert_line_below(copy_margin=not in_paste_mode())
         rime.conditional_enable()
 
-    @repl.add_key_binding("O", filter=ViNavigationMode())  # type: ignore
+    @repl.add_key_binding("O", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -121,7 +120,7 @@ def viemacs(rime: IME) -> None:
         event.current_buffer.insert_line_above(copy_margin=not in_paste_mode())
         rime.conditional_enable()
 
-    @repl.add_key_binding("s", filter=ViNavigationMode())  # type: ignore
+    @repl.add_key_binding("s", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -135,7 +134,7 @@ def viemacs(rime: IME) -> None:
         event.app.clipboard.set_text(text)
         rime.conditional_enable()
 
-    @repl.add_key_binding("C", filter=ViNavigationMode())  # type: ignore
+    @repl.add_key_binding("C", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -153,8 +152,8 @@ def viemacs(rime: IME) -> None:
         event.app.clipboard.set_text(deleted)
         rime.conditional_enable()
 
-    @repl.add_key_binding("c", "c", filter=ViNavigationMode())  # type: ignore
-    @repl.add_key_binding("S", filter=ViNavigationMode())  # type: ignore
+    @repl.add_key_binding("c", "c", filter=vi_navigation_mode)
+    @repl.add_key_binding("S", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 

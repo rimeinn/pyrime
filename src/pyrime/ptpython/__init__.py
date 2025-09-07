@@ -32,49 +32,18 @@ class IME:
         :rtype: None
         """
 
-    def filter(self, condition: Condition | None = None) -> Condition:
-        r"""Filter.
+    def filter(self) -> Condition:
+        r"""Filter. Only when ``preedit`` is empty, key binding works.
 
-        :param condition:
-        :type condition: Condition | None
         :rtype: Condition
         """
 
         @Condition
-        def _(condition: Condition | None = condition) -> bool:
+        def _() -> bool:
             r""".
 
-            :param condition:
-            :type condition: Condition | None
             :rtype: bool
             """
-            if condition is None:
-                return self.preedit == ""
-            return self.preedit == "" and condition()
-
-        return _
-
-    def mode(self, keys: list[str]) -> Condition:
-        r"""Mode.
-
-        :param keys:
-        :type keys: list[str]
-        :rtype: Condition
-        """
-
-        @Condition
-        def _(keys: list[str] = keys) -> bool:
-            r""".
-
-            :param keys:
-            :type keys: list[str]
-            :rtype: bool
-            """
-            if len(keys) == 1 == len(keys[0]):
-                return self.is_enabled
-            elif len(keys) == 1 or len(keys) > 1 and keys[0] == "escape":
-                return self.preedit != ""
-            else:
-                raise NotImplementedError
+            return self.preedit == ""
 
         return _

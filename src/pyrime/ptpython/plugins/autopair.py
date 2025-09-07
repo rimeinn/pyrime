@@ -4,6 +4,7 @@ r"""Autopair
 Refer `zsh-autopair <https://github.com/hlissner/zsh-autopair>`_.
 """
 
+from prompt_toolkit.filters.app import emacs_insert_mode, vi_insert_mode
 from prompt_toolkit.key_binding.bindings.named_commands import (
     backward_char,
     backward_delete_char,
@@ -12,7 +13,6 @@ from prompt_toolkit.key_binding.bindings.named_commands import (
 )
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 
-from ..utils.condition import InsertMode
 from . import IME
 
 
@@ -25,7 +25,9 @@ def autopair(rime: IME) -> None:
     """
     repl = rime.repl
 
-    @repl.add_key_binding("c-h", filter=rime.filter(InsertMode))  # type: ignore
+    @repl.add_key_binding(
+        "c-h", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
+    )  # type: ignore
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -54,7 +56,9 @@ def autopair(rime: IME) -> None:
                 break
         backward_delete_char(event)
 
-    @repl.add_key_binding("[", filter=rime.filter(InsertMode))  # type: ignore
+    @repl.add_key_binding(
+        "[", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
+    )  # type: ignore
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -65,7 +69,9 @@ def autopair(rime: IME) -> None:
         event.cli.current_buffer.insert_text("[]")
         backward_char(event)
 
-    @repl.add_key_binding("]", filter=rime.filter(InsertMode))  # type: ignore
+    @repl.add_key_binding(
+        "]", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
+    )  # type: ignore
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -79,7 +85,9 @@ def autopair(rime: IME) -> None:
         else:
             forward_char(event)
 
-    @repl.add_key_binding("(", filter=rime.filter(InsertMode))  # type: ignore
+    @repl.add_key_binding(
+        "(", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
+    )  # type: ignore
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -90,7 +98,9 @@ def autopair(rime: IME) -> None:
         event.cli.current_buffer.insert_text("()")
         backward_char(event)
 
-    @repl.add_key_binding(")", filter=rime.filter(InsertMode))  # type: ignore
+    @repl.add_key_binding(
+        ")", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
+    )  # type: ignore
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -104,7 +114,9 @@ def autopair(rime: IME) -> None:
         else:
             forward_char(event)
 
-    @repl.add_key_binding("{", filter=rime.filter(InsertMode))  # type: ignore
+    @repl.add_key_binding(
+        "{", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
+    )  # type: ignore
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -115,7 +127,9 @@ def autopair(rime: IME) -> None:
         event.cli.current_buffer.insert_text("{}")
         backward_char(event)
 
-    @repl.add_key_binding("}", filter=rime.filter(InsertMode))  # type: ignore
+    @repl.add_key_binding(
+        "}", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
+    )  # type: ignore
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -129,7 +143,9 @@ def autopair(rime: IME) -> None:
         else:
             forward_char(event)
 
-    @repl.add_key_binding("'", filter=rime.filter(InsertMode))  # type: ignore
+    @repl.add_key_binding(
+        "'", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
+    )  # type: ignore
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -144,7 +160,9 @@ def autopair(rime: IME) -> None:
         else:
             forward_char(event)
 
-    @repl.add_key_binding("`", filter=rime.filter(InsertMode))  # type: ignore
+    @repl.add_key_binding(
+        "`", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
+    )  # type: ignore
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -159,7 +177,9 @@ def autopair(rime: IME) -> None:
         else:
             forward_char(event)
 
-    @repl.add_key_binding('"', filter=rime.filter(InsertMode))  # type: ignore
+    @repl.add_key_binding(
+        '"', filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
+    )  # type: ignore
     def _(event: KeyPressEvent) -> None:
         """.
 

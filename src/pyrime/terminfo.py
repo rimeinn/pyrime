@@ -28,14 +28,17 @@ with open(os.path.join(json_dir, "keys.json")) as f:
     key_map: dict[str, int] = json.load(f)
 with open(os.path.join(json_dir, "modifiers.json")) as f:
     modifiers: list = json.load(f)
+# escape numbers
 key_map = {
     ("_" if k in "".join(map(str, range(10))) else "") + k: v
     for k, v in key_map.items()
 }
 name_map = {
-    "Enter": "Return",
-    "Pageup": "Page_Up",
-    "Pagedown": "Page_Down",
+    "space": " ",
+    "enter": "Return",
+    "backspace": "BackSpace",
+    "pageup": "Page_Up",
+    "pagedown": "Page_Down",
 }
 template_map = {
     "Return": "\x1b[27;{};13~",
@@ -45,30 +48,34 @@ template_map = {
 class BasicKeyEnum(Enum):
     r"""BasickeyEnum."""
 
-    def get_rime_name(self) -> str:
-        r"""Get rime name.
+    @property
+    def rime_name(self) -> str:
+        r"""Rime name.
 
         :rtype: str
         """
-        return {v: k for k, v in key_map.items()}[self.value].lstrip("_")
+        return self.value_to_rime(self.value)
 
-    def get_pt_name(self) -> str:
-        r"""Get pt name.
+    @property
+    def pt_name(self) -> str:
+        r"""Prompt toolkit name.
 
         :rtype: str
         """
-        return self.rime_to_pt(self.get_rime_name())
+        return self.rime_to_pt(self.rime_name)
 
-    def get_template(self) -> str | None:
-        r"""Get template.
+    @property
+    def template(self) -> str | None:
+        r"""Template.
 
         :rtype: str | None
         """
-        return template_map.get(self.get_rime_name())
+        return template_map.get(self.rime_name)
 
     @classmethod
     def from_rime_name(cls, name: str) -> Self:
-        r"""From rime name.
+        r"""From rime name. Add escaped '_' for numbers because variable name
+        cannot start with number.
 
         :param name:
         :type name: str
@@ -124,29 +131,39 @@ class BasicKeyEnum(Enum):
         :type name: str
         :rtype: str
         """
-        if len(name) == 1:
-            return name
-        name = {v: k for k, v in name_map.items()}.get(name, name)
-        name = name.lower()
+        name = {v: k for k, v in name_map.items()}.get(
+            name, name if len(name) == 1 else name.lower()
+        )
         return name
 
-    @staticmethod
-    def pt_to_rime(name: str) -> str:
-        r"""Convert prompt_toolkit name to rime name.
+    @classmethod
+    def pt_to_rime(cls, name: str) -> str:
+        r"""Convert prompt toolkit name to rime name.
 
+        :param cls:
         :param name:
         :type name: str
         :rtype: str
         """
-        if name == " ":
-            return "space"
-        if len(name) == 1:
-            return name
-        name = name.capitalize()
-        name = name_map.get(name, name)
+        name = name_map.get(
+            name, name if len(name) == 1 else name.capitalize()
+        )
         if name in key_map:
             return name
-        raise NotImplementedError
+        return cls.value_to_rime(ord(name))
+
+    @staticmethod
+    def value_to_rime(value: int) -> str:
+        r"""Value to rime. Remove escaped '_'.
+        2 cases will result in ``name not in key_map``:
+        1. name: '0', key_map's name: '_0'
+        2. name: '=', key_map's name: 'equal'
+
+        :param value:
+        :type value: int
+        :rtype: str
+        """
+        return {v: k for k, v in key_map.items()}[value].lstrip("_")
 
 
 BasicKey = BasicKeyEnum("BasicKey", key_map)
@@ -259,13 +276,13 @@ class Key:
         :rtype: list[Keys | str]
         """
         keys = []
-        template = self.basic.get_template()
+        template = self.basic.template
         if template:
             keys = list(self.modifier.format(template))
             if keys[0] == "\x1b":
                 keys[0] = "escape"
         else:
-            name = self.basic.get_pt_name()
+            name = self.basic.pt_name
             for modifier in self.modifier:
                 if modifier == ModifierKey.Alt:
                     keys += ["escape"]
@@ -298,18 +315,21 @@ class Key:
             raise NotImplementedError
         name = "".join(names)
         if len(names) == 1:
+            # use tab not c-i
             name = {v: k for k, v in KEY_ALIASES.items()}.get(name, name)
+            # get prompt toolkit name
             if name.startswith("c-"):
                 modifier |= ModifierKey.Control
                 _, _, name = name.partition("c-")
+                # extra key aliases
                 name = {"^": "6", "-": "_"}.get(name, name)
             if name.startswith("s-"):
                 modifier |= ModifierKey.Shift
                 _, _, name = name.partition("s-")
-            basic = BasicKey.new(name)
         else:
             prefix, _, suffix = name.partition(";")
             modifier |= ModifierKey.from_ansi(int(suffix[0]))
+            # get template
             name = prefix + _ + "{}" + suffix[1:]
-            basic = BasicKey.new(name)
+        basic = BasicKey.new(name)
         return cls(basic, modifier)

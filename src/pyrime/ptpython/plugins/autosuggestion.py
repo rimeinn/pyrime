@@ -8,9 +8,9 @@ import re
 
 from prompt_toolkit.filters import (
     Condition,
-    ViInsertMode,
     emacs_mode,
 )
+from prompt_toolkit.filters.app import vi_insert_mode
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 from prompt_toolkit.keys import Keys
 from ptpython.repl import PythonRepl
@@ -39,10 +39,10 @@ def autosuggestion(repl: PythonRepl) -> None:
 
     @repl.add_key_binding(
         "right",
-        filter=suggestion_available & ViInsertMode(),  # type: ignore
+        filter=suggestion_available & vi_insert_mode,  # type: ignore
     )
     @repl.add_key_binding("right", filter=suggestion_available & emacs_mode)  # type: ignore
-    @repl.add_key_binding("c-f", filter=suggestion_available & ViInsertMode())  # type: ignore
+    @repl.add_key_binding("c-f", filter=suggestion_available & vi_insert_mode)  # type: ignore
     @repl.add_key_binding("c-f", filter=suggestion_available & emacs_mode)  # type: ignore
     def _(event: "KeyPressEvent") -> None:
         """.

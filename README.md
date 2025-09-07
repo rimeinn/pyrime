@@ -74,13 +74,13 @@ pacboy -S --noconfirm pkg-config librime gcc
 
 ```python
 from ptpython.repl import PythonRepl
-from prompt_toolkit.filters import EmacsInsertMode, ViInsertMode
+from prompt_toolkit.filters.app import (
+    emacs_insert_mode,
+    vi_insert_mode,
+    vi_navigation_mode,
+)
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 from pyrime.ptpython.plugins import RIME
-from pyrime.ptpython.utils.condition import (
-    InsertMode,
-    any_condition,
-)
 
 
 def configure(repl: PythonRepl) -> None:
@@ -88,7 +88,7 @@ def configure(repl: PythonRepl) -> None:
 
     @repl.add_key_binding(
         "c-^",
-        filter=any_condition(InsertMode, rime.mode(["c-^"])),
+        filter=(emacs_insert_mode | vi_insert_mode) & rime.filter(),
     )
     def _(event: KeyPressEvent) -> None:
         rime.toggle()
@@ -97,15 +97,15 @@ def configure(repl: PythonRepl) -> None:
 If you defined some key bindings which will disturb rime, try:
 
 ```python
-    @repl.add_key_binding("c-h", filter=rime.filter(EmacsInsertMode()))
+    @repl.add_key_binding("c-h", filter=emacs_insert_mode & rime.filter())
     def _(event: KeyPressEvent) -> None:
         rime.toggle()
 ```
 
-If you want to exit rime in `ViNavigationMode()`, try:
+If you want to exit rime in `vi_navigation_mode`, try:
 
 ```python
-    @repl.add_key_binding("escape", filter=EmacsInsertMode())
+    @repl.add_key_binding("escape", filter=emacs_insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -118,7 +118,7 @@ If you want to exit rime in `ViNavigationMode()`, try:
         rime.conditional_disable()
 
     # and a, I, A, ...
-    @repl.add_key_binding("i", filter=ViNavigationMode())
+    @repl.add_key_binding("i", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -131,8 +131,8 @@ If you want to exit rime in `ViNavigationMode()`, try:
         rime.conditional_enable()
 ```
 
-It will remember rime status and enable it when reenter `ViInsertMode()` or
-`EmacsInsertMode()`.
+It will remember rime status and enable it when reenter `vi_insert_mode` or
+`emacs_insert_mode`.
 
 Some utility functions are defined in this project. Refer
 [my ptpython config](https://github.com/rimeinn/rimeinn/blob/main/.config/ptpython/config.py)
