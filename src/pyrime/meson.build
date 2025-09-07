@@ -51,7 +51,6 @@ py.install_sources(
 )
 py.install_sources(
   [
-    'ptpython/utils/condition.py',
     'ptpython/utils/ansi.py',
     'ptpython/utils/insert.py',
     'ptpython/utils/prompt_style.py',
