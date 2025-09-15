@@ -75,12 +75,12 @@ repos:
         additional_dependencies:
           - markdown-it-texmath
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.11
+    rev: v0.13.0
     hooks:
       - id: ruff
       - id: ruff-format
   - repo: https://github.com/kumaraditya303/mirrors-pyright
-    rev: v1.1.404
+    rev: v1.1.405
     hooks:
       - id: pyright
   - repo: https://github.com/trim21/pre-commit-mirror-meson
