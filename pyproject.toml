@@ -30,10 +30,11 @@ classifiers = [
 dependencies = ["platformdirs"]
 
 [project.optional-dependencies]
+cli = ["getch"]
 color = ["colorama"]
 dev = ["pytest-cov", "wcwidth", "prompt-toolkit"]
 prompt-toolkit = ["prompt-toolkit"]
-ptpython = ["ptpython"]
+ptpython = ["ptpython", "wcwidth"]
 
 [[project.authors]]
 name = "Wu, Zhenyu"

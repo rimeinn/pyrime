@@ -269,20 +269,20 @@ class Key:
     @classmethod
     def new(
         cls,
-        code_or_keys: int | str | list[Keys | str],
+        code_or_keys: int | str | tuple[Keys | str, ...],
         modifier: ModifierKey = ModifierKey.NULL,
     ) -> Self:
         r"""New.
 
         :param cls:
         :param code_or_keys:
-        :type code_or_keys: int | str | list[Keys | str]
+        :type code_or_keys: int | str | tuple[Keys | str, ...]
         :param modifier:
         :type modifier: ModifierKey
         :rtype: Self
         """
-        if isinstance(code_or_keys, list):
-            return cls.from_prompt_toolkit(code_or_keys)
+        if isinstance(code_or_keys, tuple):
+            return cls.from_prompt_toolkit(*code_or_keys)
         else:
             if isinstance(code_or_keys, int):
                 basic = BasicKey(code_or_keys)
@@ -304,12 +304,12 @@ class Key:
         return cls(BasicKey(code), ModifierKey(mask))
 
     @classmethod
-    def from_prompt_toolkit(cls, keys: list[Keys | str]) -> Self:
+    def from_prompt_toolkit(cls, *keys: Keys | str) -> Self:
         r"""Create a new Key from prompt-toolkit key name.
 
         :param cls:
         :param keys:
-        :type keys: list[Keys | str]
+        :type keys: Keys | str
         :rtype: Self
         """
         names: list[str] = []

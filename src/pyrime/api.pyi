@@ -28,7 +28,7 @@ from . import (
     __version__,
 )
 from . import __name__ as NAME
-from .__main__ import log_dir, shared_data_dir, user_data_dir
+from .dirs import log_dir, shared_data_dir, user_data_dir
 
 @dataclass
 class Traits:

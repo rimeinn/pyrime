@@ -91,6 +91,13 @@ n|
 [① 你]② 那 ③ 呢 ④ 能 ⑤ 年 ⑥ 您 ⑦ 内 ⑧ 拿 ⑨ 哪 ⓪ 弄 |>
 ```
 
+A simplest example can be found by:
+
+```sh
+pip install pyrime[cli]
+python -m pyrime
+```
+
 ## Configure
 
 `~/.config/ptpython/config.py`:

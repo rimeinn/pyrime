@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from prompt_toolkit.buffer import Buffer
 from prompt_toolkit.filters import Condition
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
+from prompt_toolkit.keys import Keys
 from prompt_toolkit.layout.containers import (
     Float,
     FloatContainer,
@@ -20,33 +21,26 @@ from prompt_toolkit.layout.layout import Layout
 from prompt_toolkit.widgets import Frame
 from wcwidth import wcswidth
 
-from ..api import Traits
 from ..key import Key, ModifierKey
-from ..session import Session
-from ..ui import UI
+from ..rime import Rime
 from . import IME
 
 
 @dataclass
-class RIME(IME):
+class RIME(Rime, IME):
     r"""RIME inherit IME."""
 
     remember_rime: bool = False
     window: Window = None  # type: ignore
     layout: Layout | None = None
-    traits: Traits | None = None
-    ui: UI = None  # type: ignore
-    keys_set: set[tuple[str, ...]] = None  # type: ignore
+    keys_set: set[tuple[Keys | str, ...]] = None  # type: ignore
 
     def __post_init__(self) -> None:
         r"""Post init.
 
         :rtype: None
         """
-        self.session = Session(self.traits)
-        self.traits = self.session.traits
-        if self.ui is None:
-            self.ui = UI()
+        super().__post_init__()
         if self.keys_set is None:
             self.keys_set = {
                 ("s-tab",),
@@ -100,19 +94,20 @@ class RIME(IME):
                 self.keys_set |= {("escape", chr(order))}
 
         for keys in self.keys_set:
-            keys = list(keys)
 
             @self.repl.add_key_binding(*keys, filter=self.mode(keys))  # type: ignore
-            def _(event: KeyPressEvent, keys: list[str] = keys) -> None:
+            def _(
+                event: KeyPressEvent, keys: tuple[Keys | str, ...] = keys
+            ) -> None:
                 r""".
 
                 :param event:
                 :type event: KeyPressEvent
                 :param keys:
-                :type keys: list[str]
+                :type keys: tuple[Keys | str, ...]
                 :rtype: None
                 """
-                self.key_binding(event, keys)
+                self.key_binding(event, *keys)
 
     def mode(self, keys: list[str]) -> Condition:
         r"""Mode.
@@ -138,16 +133,16 @@ class RIME(IME):
 
         return _
 
-    def key_binding(self, event: KeyPressEvent, keys: list[str]) -> None:
+    def key_binding(self, event: KeyPressEvent, *keys: Keys | str) -> None:
         r"""Key binding.
 
         :param event:
         :type event: KeyPressEvent
         :param keys:
-        :type keys: list[str]
+        :type keys: Keys | str
         :rtype: None
         """
-        text, lines, col = self.draw(keys)
+        text, lines, col = self.draw(Key.new(keys))
         self.preedit = lines[0].strip(" " + self.ui.cursor)
         ui_text = "\n".join(lines)
         event.cli.current_buffer.insert_text(text)
@@ -159,24 +154,6 @@ class RIME(IME):
         left += col
         self.repl.app.layout.container.floats[0].left = left  # type: ignore
         self.repl.app.layout.container.floats[0].top = top  # type: ignore
-
-    def draw(self, keys: list[str]) -> tuple[str, list[str], int]:
-        r"""Draw.
-
-        :param keys:
-        :type keys: list[str]
-        :rtype: tuple[str, list[str], int]
-        """
-        key = Key.new(keys)
-        if not self.session.process_key(key.code, key.mask):
-            if len(keys) == 1 == len(keys[0]):
-                return keys[0], [self.ui.cursor], 0
-            return "", [self.ui.cursor], 0
-        context = self.session.get_context()
-        if context is None or context.menu.num_candidates == 0:
-            return self.session.get_commit_text(), [self.ui.cursor], 0
-        lines, col = self.ui.draw(context)
-        return "", lines, col
 
     def swap_layout(self):
         r"""Swap layout."""
