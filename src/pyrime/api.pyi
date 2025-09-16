@@ -23,6 +23,7 @@ from . import (
     Commit,
     Composition,
     Context,
+    LogLevel,
     Menu,
     SchemaListItem,
     __version__,
@@ -39,7 +40,7 @@ class Traits:
     distribution_code_name: str = NAME
     distribution_version: str = __version__
     app_name: str = "rime." + NAME
-    min_log_level: int = 3
+    min_log_level: LogLevel = LogLevel.FATAL
     data_size: int = 0
     address: int = 0
 
@@ -52,7 +53,7 @@ class Traits:
         os.makedirs(self.log_dir, exist_ok=True)
         if "@" in self.distribution_version:
             self.distribution_version = "0.0.1"
-        c_min_log_level: c.int = self.min_log_level
+        c_min_log_level: c.int = self.min_log_level.value
         traits: RimeTraits = RimeTraits(
             shared_data_dir=self.shared_data_dir.encode(),
             user_data_dir=self.user_data_dir.encode(),

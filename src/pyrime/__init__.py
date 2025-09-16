@@ -3,8 +3,16 @@ r"""Provide ``__version__`` for
 """
 
 from dataclasses import dataclass
+from enum import Enum, auto
 
 __version__ = "@PROJECT_VERSION@"
+
+
+class LogLevel(Enum):
+    INFO = 0
+    WARNING = auto()
+    ERROR = auto()
+    FATAL = auto()
 
 
 @dataclass
