@@ -12,7 +12,7 @@ class Test:
 
         :rtype: None
         """
-        key = Key.new(["c-^"])
+        key = Key.new(("c-^",))
         assert key.basic.value == ord("6")
         assert key.modifier == ModifierKey.Control
 
@@ -38,5 +38,5 @@ class Test:
         key = Key.new(
             "enter", ModifierKey.Control | ModifierKey.Shift | ModifierKey.Alt
         )
-        assert key.keys == ["escape", *"[27;8;13~"]
-        assert key == Key.new(["escape", *"[27;8;13~"])
+        assert key.keys == ("escape", *"[27;8;13~")
+        assert key == Key.new(("escape", *"[27;8;13~"))
