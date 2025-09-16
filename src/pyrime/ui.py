@@ -10,26 +10,28 @@ from wcwidth import wcswidth
 
 from . import Context
 
+# https://github.com/Freed-Wu/tmux-digit/blob/547226faa6ea32b3805bcd9a5a54bf943b8e4c48/digit.tmux#L3-L9
+STYLES = {
+    "circle": ("①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⓪"),
+    "circle_inv": ("󰲠", "󰲢", "󰲤", "󰲦", "󰲨", "󰲪", "󰲬", "󰲮", "󰲰", "0"),
+    "square": ("󰎦", "󰎩", "󰎬", "󰎮", "󰎰", "󰎵", "󰎸", "󰎻", "󰎾", "󰎣"),
+    "square_inv": ("󰎤", "󰎧", "󰎪", "󰎭", "󰎱", "󰎳", "󰎶", "󰎹", "󰎼", "󰎡"),
+    "layer": ("󰎥", "󰎨", "󰎫", "󰎲", "󰎯", "󰎴", "󰎷", "󰎺", "󰎽", "󰎢"),
+    "layer_inv": ("󰼏", "󰼐", "󰼑", "󰼒", "󰼓", "󰼔", "󰼕", "󰼖", "󰼗", "󰼎"),
+    "number": ("󰬺", "󰬻", "󰬼", "󰬽", "󰬾", "󰬿", "󰭀", "󰭁", "󰭂", ""),
+}
+
 
 @dataclass
 class UI:
     r"""UI."""
 
-    indices: list[str] = None  # type: ignore
+    indices: tuple[str, ...] = STYLES["circle"]
     left: str = "<|"
     right: str = "|>"
     left_sep: str = "["
     right_sep: str = "]"
     cursor: str = "|"
-
-    def __post_init__(self) -> None:
-        r"""Post init.
-
-        :param self:
-        :rtype: None
-        """
-        if self.indices is None:
-            self.indices = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⓪"]
 
     def draw(self, context: Context) -> tuple[list[str], int]:
         r"""Draw UI.
