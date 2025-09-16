@@ -1,0 +1,81 @@
+r"""Draw UI
+===========
+
+Draw UI of IME.
+"""
+
+from dataclasses import dataclass
+
+from wcwidth import wcswidth
+
+from . import Context
+
+
+@dataclass
+class UI:
+    r"""UI."""
+
+    indices: list[str] = None  # type: ignore
+    left: str = "<|"
+    right: str = "|>"
+    left_sep: str = "["
+    right_sep: str = "]"
+    cursor: str = "|"
+
+    def __post_init__(self) -> None:
+        r"""Post init.
+
+        :param self:
+        :rtype: None
+        """
+        if self.indices is None:
+            self.indices = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⓪"]
+
+    def draw(self, context: Context) -> tuple[list[str], int]:
+        r"""Draw UI.
+
+        :param self:
+        :param context:
+        :type context: Context
+        :rtype: tuple[list[str], int]
+        """
+        if context.composition.preedit is None:
+            preedit = ""
+        else:
+            preedit = context.composition.preedit
+        preedit = (
+            preedit[0 : context.composition.cursor_pos]
+            + self.cursor
+            + preedit[context.composition.cursor_pos :]
+        )
+        candidates = context.menu.candidates
+        candidates_ = ""
+        indices = self.indices
+        for index, candidate in enumerate(candidates):
+            text = indices[index] + " " + candidate.text
+            if candidate.comment:
+                text = text + " " + candidate.comment
+            if context.menu.highlighted_candidate_index == index:
+                text = self.left_sep + text
+            elif context.menu.highlighted_candidate_index + 1 == index:
+                text = self.right_sep + text
+            else:
+                text = " " + text
+            candidates_ = candidates_ + text
+        if (
+            context.menu.num_candidates
+            == context.menu.highlighted_candidate_index + 1
+        ):
+            candidates_ = candidates_ + self.right_sep
+        else:
+            candidates_ = candidates_ + " "
+        col = 0
+        left = self.left
+        if context.menu.page_no != 0:
+            num = wcswidth(self.left)
+            candidates_ = left + candidates_
+            preedit = " " * num + preedit
+            col = col - num
+        if not context.menu.is_last_page and context.menu.num_candidates > 0:
+            candidates_ = candidates_ + self.right
+        return [preedit, candidates_], col

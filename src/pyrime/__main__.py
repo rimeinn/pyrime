@@ -3,7 +3,6 @@ r"""This module can be called by
 """
 
 import os
-from dataclasses import dataclass
 
 from platformdirs import user_data_path
 
@@ -37,18 +36,10 @@ for prefix in [
         user_data_dir = path
         break
 
-
-@dataclass
-class Traits:
-    shared_data_dir: str = shared_data_dir
-    user_data_dir: str = user_data_dir
-    log_dir: str = str(user_data_path("ptpython") / "rime")
-    distribution_name: str = "Rime"
-    distribution_code_name: str = "pyrime"
-    distribution_version: str = "0.0.1"
-    app_name: str = "rime.pyrime"
-    min_log_level: int = 3
+log_dir = str(user_data_path("ptpython") / "rime")
 
 
 if __name__ == "__main__":
-    print(Traits())
+    print(shared_data_dir)
+    print(user_data_dir)
+    print(log_dir)

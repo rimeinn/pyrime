@@ -67,6 +67,30 @@ brew install librime pkg-config
 pacboy -S --noconfirm pkg-config librime gcc
 ```
 
+## Usage
+
+```python
+from pyrime.key import Key
+from pyrime.session import Session
+from pyrime.ui import UI
+
+session = Session()
+key = Key.new("n")
+ui = UI()
+if not session.process_key(key.code, key.mask):
+    raise Exception
+context = session.get_context()
+if context is None:
+    raise Exception
+content, _ = ui.draw(context)
+print("\n".join(content))
+```
+
+```text
+n|
+[① 你]② 那 ③ 呢 ④ 能 ⑤ 年 ⑥ 您 ⑦ 内 ⑧ 拿 ⑨ 哪 ⓪ 弄 |>
+```
+
 ## Configure
 
 `~/.config/ptpython/config.py`:

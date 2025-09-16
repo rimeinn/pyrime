@@ -1,11 +1,10 @@
 r"""Rime for Ptpython
 =====================
 
-``RIME`` inherits ``pyrime.ptpython``'s ``IME`` and ``pyrime.rime``'s ``Rime``
-to use ``Rime``s OOP APIs to call librime on the basis of ``IME``.
+``RIME`` inherits ``pyrime.ptpython``'s ``IME`` to use ``Session``s OOP APIs to
+call librime on the basis of ``IME``.
 """
 
-import os
 from dataclasses import dataclass
 
 from prompt_toolkit.buffer import Buffer
@@ -21,21 +20,21 @@ from prompt_toolkit.layout.layout import Layout
 from prompt_toolkit.widgets import Frame
 from wcwidth import wcswidth
 
-from ..__main__ import Traits
-from ..draw_ui import UI, draw_ui
-from ..rime import Rime
-from ..terminfo import Key, ModifierKey
+from ..api import Traits
+from ..key import Key, ModifierKey
+from ..session import Session
+from ..ui import UI
 from . import IME
 
 
 @dataclass
-class RIME(Rime, IME):
-    r"""RIME inherit IME and Rime."""
+class RIME(IME):
+    r"""RIME inherit IME."""
 
     remember_rime: bool = False
     window: Window = None  # type: ignore
     layout: Layout | None = None
-    traits: Traits = None  # type: ignore
+    traits: Traits | None = None
     ui: UI = None  # type: ignore
     keys_set: set[tuple[str, ...]] = None  # type: ignore
 
@@ -44,8 +43,8 @@ class RIME(Rime, IME):
 
         :rtype: None
         """
-        if self.traits is None:
-            self.traits = Traits()
+        self.session = Session(self.traits)
+        self.traits = self.session.traits
         if self.ui is None:
             self.ui = UI()
         if self.keys_set is None:
@@ -54,35 +53,15 @@ class RIME(Rime, IME):
                 ("s-escape",),
                 ("escape", "backspace"),
                 ("escape", "enter"),
-                tuple(
-                    Key.new("enter", ModifierKey.Shift).get_prompt_toolkit()
-                ),
-                tuple(
-                    Key.new("enter", ModifierKey.Control).get_prompt_toolkit()
-                ),
-                tuple(
-                    Key.new(
-                        "enter", ModifierKey.Shift | ModifierKey.Control
-                    ).get_prompt_toolkit()
-                ),
-                tuple(
-                    Key.new(
-                        "enter", ModifierKey.Shift | ModifierKey.Alt
-                    ).get_prompt_toolkit()
-                ),
-                tuple(
-                    Key.new(
-                        "enter", ModifierKey.Control | ModifierKey.Alt
-                    ).get_prompt_toolkit()
-                ),
-                tuple(
-                    Key.new(
-                        "enter",
-                        ModifierKey.Shift
-                        | ModifierKey.Control
-                        | ModifierKey.Alt,
-                    ).get_prompt_toolkit()
-                ),
+                Key.new("enter", ModifierKey.Shift).keys,
+                Key.new("enter", ModifierKey.Control).keys,
+                Key.new("enter", ModifierKey.Shift | ModifierKey.Control).keys,
+                Key.new("enter", ModifierKey.Shift | ModifierKey.Alt).keys,
+                Key.new("enter", ModifierKey.Control | ModifierKey.Alt).keys,
+                Key.new(
+                    "enter",
+                    ModifierKey.Shift | ModifierKey.Control | ModifierKey.Alt,
+                ).keys,
             }
             for order in range(ord(" "), ord("~") + 1):
                 self.keys_set |= {(chr(order),)}
@@ -188,14 +167,15 @@ class RIME(Rime, IME):
         :type keys: list[str]
         :rtype: tuple[str, list[str], int]
         """
-        if not self.process_key(*Key.new(keys).get_rime()):
+        key = Key.new(keys)
+        if not self.session.process_key(key.code, key.mask):
             if len(keys) == 1 == len(keys[0]):
                 return keys[0], [self.ui.cursor], 0
             return "", [self.ui.cursor], 0
-        context = self.get_context()
+        context = self.session.get_context()
         if context is None or context.menu.num_candidates == 0:
-            return self.get_commit_text(), [self.ui.cursor], 0
-        lines, col = draw_ui(context, self.ui)
+            return self.session.get_commit_text(), [self.ui.cursor], 0
+        lines, col = self.ui.draw(context)
         return "", lines, col
 
     def swap_layout(self):
@@ -213,7 +193,7 @@ class RIME(Rime, IME):
         self.swap_layout()
         self.is_enabled = False
         self.preedit = ""
-        self.clear_composition()
+        self.session.clear_composition()
 
     def calculate(self) -> tuple[int, int]:
         r"""Calculate.
@@ -239,10 +219,6 @@ class RIME(Rime, IME):
 
         :rtype: None
         """
-        if self.session_id == 0:
-            os.makedirs(self.traits.log_dir, exist_ok=True)
-            self.init(self.traits)
-            self.session_id = self.create_session()
         left, top = self.calculate()
         self.window = Window(
             BufferControl(buffer=Buffer()),

@@ -16,7 +16,7 @@ from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 from prompt_toolkit.key_binding.vi_state import InputMode
 from prompt_toolkit.selection import SelectionType
 
-from ...terminfo import Key, ModifierKey
+from ...key import Key, ModifierKey
 from . import IME
 
 
@@ -176,35 +176,29 @@ def viemacs(rime: IME) -> None:
         rime.conditional_enable()
 
     @repl.add_key_binding(
-        *Key.new("enter", ModifierKey.Shift).get_prompt_toolkit(),
+        *Key.new("enter", ModifierKey.Shift).keys,
         filter=rime.filter(),
     )
     @repl.add_key_binding(
-        *Key.new("enter", ModifierKey.Control).get_prompt_toolkit(),
+        *Key.new("enter", ModifierKey.Control).keys,
         filter=rime.filter(),
     )
     @repl.add_key_binding(
-        *Key.new(
-            "enter", ModifierKey.Control | ModifierKey.Shift
-        ).get_prompt_toolkit(),
+        *Key.new("enter", ModifierKey.Control | ModifierKey.Shift).keys,
         filter=rime.filter(),
     )
     @repl.add_key_binding(
-        *Key.new(
-            "enter", ModifierKey.Shift | ModifierKey.Alt
-        ).get_prompt_toolkit(),
+        *Key.new("enter", ModifierKey.Shift | ModifierKey.Alt).keys,
         filter=rime.filter(),
     )
     @repl.add_key_binding(
-        *Key.new(
-            "enter", ModifierKey.Control | ModifierKey.Alt
-        ).get_prompt_toolkit(),
+        *Key.new("enter", ModifierKey.Control | ModifierKey.Alt).keys,
         filter=rime.filter(),
     )
     @repl.add_key_binding(
         *Key.new(
             "enter", ModifierKey.Control | ModifierKey.Shift | ModifierKey.Alt
-        ).get_prompt_toolkit(),
+        ).keys,
         filter=rime.filter(),
     )
     def _(event: KeyPressEvent) -> None:

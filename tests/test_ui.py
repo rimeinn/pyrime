@@ -1,14 +1,14 @@
 r"""Test draw UI."""
 
 from pyrime import Candidate, Composition, Context, Menu
-from pyrime.draw_ui import UI, draw_ui
+from pyrime.ui import UI
 
 
 class Test:
     r"""Test."""
 
     @staticmethod
-    def test_draw_ui() -> None:
+    def test_ui() -> None:
         r"""Test draw UI.
 
         :rtype: None
@@ -44,4 +44,4 @@ class Test:
         )
         ui = UI()
         lines = ["w|", "[① 我]② 为 ③ 玩 ④ 问 ⑤ 无 ⑥ 万 ⑦ 完 ⑧ 网 ⑨ 王 ⓪ 外 |>"]
-        assert draw_ui(context, ui) == (lines, 0)
+        assert ui.draw(context) == (lines, 0)

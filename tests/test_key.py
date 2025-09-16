@@ -1,6 +1,6 @@
-r"""Test terminfo."""
+r"""Test key."""
 
-from pyrime.terminfo import Key, ModifierKey
+from pyrime.key import Key, ModifierKey
 
 
 class Test:
@@ -38,5 +38,5 @@ class Test:
         key = Key.new(
             "enter", ModifierKey.Control | ModifierKey.Shift | ModifierKey.Alt
         )
-        assert key.get_prompt_toolkit() == ["escape", *"[27;8;13~"]
+        assert key.keys == ["escape", *"[27;8;13~"]
         assert key == Key.new(["escape", *"[27;8;13~"])

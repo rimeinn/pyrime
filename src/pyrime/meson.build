@@ -19,10 +19,10 @@ header_path = run_command('pkg-config', '--variable=includedir', 'rime', check: 
 configure_file(command: ['autopxd', header_path, 'rime_api.pxd'], output: 'rime_api.pxd')
 
 py.extension_module(
-  '_C',
+  'api',
   [
     # https://github.com/mesonbuild/meson/issues/8693#issuecomment-2511060673
-    configure_file(input: '_C.pyi', output: '_C.pyx', copy: true),
+    configure_file(input: 'api.pyi', output: 'api.pyx', copy: true),
   ],
   dependencies: deps,
   subdir: 'pyrime',
@@ -32,12 +32,12 @@ py.extension_module(
 py.install_sources(
   [
     configure_file(input: '__init__.py', output: '__init__.py', configuration: conf_data),
-    '_C.pyi',
-    'rime.py',
-    'py.typed',
     '__main__.py',
-    'draw_ui.py',
-    'terminfo.py',
+    'py.typed',
+    'api.pyi',
+    'key.py',
+    'session.py',
+    'ui.py',
   ],
   subdir: 'pyrime',
 )

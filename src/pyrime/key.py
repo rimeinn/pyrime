@@ -221,16 +221,50 @@ class ModifierKey(Flag):
 class Key:
     r"""Key."""
 
-    basic: BasicKey
-    modifier: ModifierKey
+    basic: BasicKey = BasicKey.space  # type: ignore
+    modifier: ModifierKey = ModifierKey.NULL
 
-    def get_rime(self) -> tuple[int, int]:
-        r"""Get rime key code and mask.
+    @property
+    def code(self) -> int:
+        r"""rime key code.
 
         :param self:
-        :rtype: tuple[int, int]
+        :rtype: int
         """
-        return self.basic.value, self.modifier.value
+        return self.basic.value
+
+    @property
+    def mask(self) -> int:
+        r"""rime key code.
+
+        :param self:
+        :rtype: int
+        """
+        return self.modifier.value
+
+    @property
+    def keys(self) -> tuple[Keys | str, ...]:
+        r"""Get prompt-toolkit key name.
+
+        :param self:
+        :rtype: tuple[Keys | str, ...]
+        """
+        keys = []
+        template = self.basic.template
+        if template:
+            keys = list(self.modifier.format(template))
+            if keys[0] == "\x1b":
+                keys[0] = "escape"
+        else:
+            name = self.basic.pt_name
+            for modifier in self.modifier:
+                if modifier == ModifierKey.Alt:
+                    keys += ["escape"]
+                elif modifier == ModifierKey.Shift:
+                    name = "s-" + name
+                elif modifier == ModifierKey.Control:
+                    name = "c-" + name
+        return tuple(keys)
 
     @classmethod
     def new(
@@ -268,29 +302,6 @@ class Key:
         :rtype: Self
         """
         return cls(BasicKey(code), ModifierKey(mask))
-
-    def get_prompt_toolkit(self) -> list[Keys | str]:
-        r"""Get prompt-toolkit key name.
-
-        :param self:
-        :rtype: list[Keys | str]
-        """
-        keys = []
-        template = self.basic.template
-        if template:
-            keys = list(self.modifier.format(template))
-            if keys[0] == "\x1b":
-                keys[0] = "escape"
-        else:
-            name = self.basic.pt_name
-            for modifier in self.modifier:
-                if modifier == ModifierKey.Alt:
-                    keys += ["escape"]
-                elif modifier == ModifierKey.Shift:
-                    name = "s-" + name
-                elif modifier == ModifierKey.Control:
-                    name = "c-" + name
-        return keys
 
     @classmethod
     def from_prompt_toolkit(cls, keys: list[Keys | str]) -> Self:
