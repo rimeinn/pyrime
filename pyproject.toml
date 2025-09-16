@@ -122,15 +122,11 @@ select = ["*-musllinux_*"]
 before-all = "apk add librime-dev"
 
 [[tool.cibuildwheel.overrides]]
-select = ["*-musllinux_riscv64"]
-before-all = "apk add librime-dev uv"
-
-[[tool.cibuildwheel.overrides]]
 select = ["*-macosx_*"]
 # AssertionError: uv not found
 before-all = "brew install librime uv"
 
 # https://github.com/astral-sh/uv/issues/10260
 [[tool.cibuildwheel.overrides]]
-select = ["*-musllinux_s390x", "*-musllinux_ppc64*"]
+select = ["*-musllinux_s390x", "*-musllinux_ppc64*", "*-musllinux_riscv64"]
 build-frontend = "build"
