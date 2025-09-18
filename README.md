@@ -47,6 +47,11 @@
 rime for python, attached to prompt-toolkit keybindings for some prompt-toolkit
 applications such as ptpython.
 
+This project is consist of two parts:
+
+- A python binding of librime
+- A IME for ptpython
+
 ## Dependence
 
 - [librime](https://github.com/rime/librime)
@@ -68,6 +73,8 @@ pacboy -S --noconfirm pkg-config librime gcc
 ```
 
 ## Usage
+
+### Binding
 
 ```python
 from pyrime.key import Key
@@ -98,7 +105,7 @@ pip install pyrime[cli]
 python -m pyrime
 ```
 
-## Configure
+### IME
 
 `~/.config/ptpython/config.py`:
 
