@@ -50,7 +50,7 @@ applications such as ptpython.
 This project is consist of two parts:
 
 - A python binding of librime
-- A IME for ptpython
+- An IME for ptpython
 
 ## Dependence
 
