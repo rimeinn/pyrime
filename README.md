@@ -50,7 +50,7 @@ applications such as ptpython.
 This project is consist of two parts:
 
 - A python binding of librime
-- An IME for ptpython
+- A librime frontend on ptpython
 
 ## Dependence
 
@@ -105,7 +105,7 @@ pip install pyrime[cli]
 python -m pyrime
 ```
 
-### IME
+### Frontend
 
 `~/.config/ptpython/config.py`:
 
@@ -174,3 +174,10 @@ It will remember rime status and enable it when reenter `vi_insert_mode` or
 Some utility functions are defined in this project. Refer
 [my ptpython config](https://github.com/rimeinn/rimeinn/blob/main/.config/ptpython/config.py)
 to know more.
+
+## Related Projects
+
+- [A collection](https://github.com/rime/librime#frontends) of rime frontends
+- [A collection](https://github.com/rimeinn/rime.nvim#bindings) of rime bindings
+- [A collection](https://github.com/rimeinn/rime.nvim#translators-and-filters)
+  of rime translators and filters
