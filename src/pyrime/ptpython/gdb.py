@@ -61,6 +61,3 @@ class PtPythonCommand(gdb.Command):
             sys.stdout = stdout
             sys.stderr = stderr
             sys.stdin = stdin
-
-
-PtPythonCommand()
