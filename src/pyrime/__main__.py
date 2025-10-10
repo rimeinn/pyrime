@@ -5,10 +5,10 @@ r"""This module can be called by
 from getch import getch
 
 from .key import BasicKey, Key
-from .rime import Rime
+from .rime import RimeBase
 
 if __name__ == "__main__":
-    rime = Rime()
+    rime = RimeBase()
     while True:
         try:
             c = getch()

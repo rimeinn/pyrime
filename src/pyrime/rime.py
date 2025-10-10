@@ -10,7 +10,7 @@ from .ui import UI
 
 
 @dataclass
-class Rime:
+class RimeBase:
     session: Session = None  # type: ignore
     ui: UI = None  # type: ignore
 

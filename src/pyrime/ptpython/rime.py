@@ -22,12 +22,12 @@ from prompt_toolkit.widgets import Frame
 from wcwidth import wcswidth
 
 from ..key import Key, ModifierKey
-from ..rime import Rime
+from ..rime import RimeBase
 from . import IME
 
 
 @dataclass
-class RIME(Rime, IME):
+class Rime(RimeBase, IME):
     r"""RIME inherit IME."""
 
     remember_rime: bool = False
