@@ -51,8 +51,6 @@ class Traits:
         :rtype: None
         """
         os.makedirs(self.log_dir, exist_ok=True)
-        if "@" in self.distribution_version:
-            self.distribution_version = "0.0.1"
         c_min_log_level: c.int = self.min_log_level.value
         traits: RimeTraits = RimeTraits(
             shared_data_dir=self.shared_data_dir.encode(),
@@ -86,7 +84,7 @@ class API:
         :param self:
         :rtype: None
         """
-        self.address = PyLong_FromVoidPtr(rime_get_api())
+        self.address: int = PyLong_FromVoidPtr(rime_get_api())
 
     def setup(self, traits: Traits) -> None:
         r"""Setup.
