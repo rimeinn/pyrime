@@ -19,9 +19,10 @@ import json
 import os
 from dataclasses import dataclass
 from enum import Enum, Flag, unique
-from typing import Self
+from typing import TYPE_CHECKING, Self
 
-from prompt_toolkit.keys import KEY_ALIASES, Keys
+if TYPE_CHECKING:
+    from prompt_toolkit.keys import Keys
 
 json_dir = os.path.join(os.path.dirname(__file__), "assets", "json")
 with open(os.path.join(json_dir, "keys.json")) as f:
@@ -243,7 +244,7 @@ class Key:
         return self.modifier.value
 
     @property
-    def keys(self) -> tuple[Keys | str, ...]:
+    def keys(self) -> "tuple[Keys | str, ...]":
         r"""Get prompt-toolkit key name.
 
         :param self:
@@ -269,7 +270,7 @@ class Key:
     @classmethod
     def new(
         cls,
-        code_or_keys: int | str | tuple[Keys | str, ...],
+        code_or_keys: "int | str | tuple[Keys | str, ...]",
         modifier: ModifierKey = ModifierKey.NULL,
     ) -> Self:
         r"""New.
@@ -304,7 +305,7 @@ class Key:
         return cls(BasicKey(code), ModifierKey(mask))
 
     @classmethod
-    def from_prompt_toolkit(cls, *keys: Keys | str) -> Self:
+    def from_prompt_toolkit(cls, *keys: "Keys | str") -> Self:
         r"""Create a new Key from prompt-toolkit key name.
 
         :param cls:
@@ -312,6 +313,8 @@ class Key:
         :type keys: Keys | str
         :rtype: Self
         """
+        from prompt_toolkit.keys import KEY_ALIASES
+
         names: list[str] = []
         modifier = ModifierKey.NULL
         for key in keys:
