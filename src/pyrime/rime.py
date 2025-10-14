@@ -2,7 +2,7 @@ r"""Rime
 ========
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from .key import Key, ModifierKey
 from .session import Session
@@ -11,18 +11,8 @@ from .ui import UI
 
 @dataclass
 class RimeBase:
-    session: Session = None  # type: ignore
-    ui: UI = None  # type: ignore
-
-    def __post_init__(self) -> None:
-        r"""Post init.
-
-        :rtype: None
-        """
-        if self.session is None:
-            self.session = Session()
-        if self.ui is None:
-            self.ui = UI()
+    session: Session = field(default_factory=Session)
+    ui: UI = field(default_factory=UI)
 
     def draw(self, *keys: Key) -> tuple[str, list[str], int]:
         r"""Wrap ``UI.draw()``.

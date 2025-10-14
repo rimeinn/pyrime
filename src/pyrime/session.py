@@ -1,6 +1,6 @@
 r"""Wrap rime as OOP APIs."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from . import Commit, Context, SchemaListItem
 from .api import API, Traits
@@ -10,8 +10,8 @@ from .api import API, Traits
 class Session:
     r"""A session for Rime"""
 
-    traits: Traits | None = None
-    api: API = None  # type: ignore
+    traits: Traits = field(default_factory=Traits)
+    api: API = field(default_factory=API)
     id: int = 0
 
     def __post_init__(self):
@@ -19,10 +19,6 @@ class Session:
 
         :param self:
         """
-        if self.api is None:
-            self.api = API()
-        if self.traits is None:
-            self.traits = Traits()
         if self.id == 0:
             self.id = self.api.create_session()
 

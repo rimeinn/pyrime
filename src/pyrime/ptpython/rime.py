@@ -40,7 +40,6 @@ class Rime(RimeBase, IME):
 
         :rtype: None
         """
-        super().__post_init__()
         if self.keys_set is None:
             self.keys_set = {
                 ("s-tab",),
