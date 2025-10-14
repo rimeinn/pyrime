@@ -9,7 +9,7 @@ Refer `vim-smartinput <https://github.com/kana/vim-smartinput>`_.
 from prompt_toolkit.filters.app import emacs_insert_mode, vi_insert_mode
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 
-from . import IME
+from .. import IME
 
 
 def smartinput(rime: IME) -> None:

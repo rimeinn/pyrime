@@ -13,7 +13,7 @@ from prompt_toolkit.key_binding.bindings.named_commands import (
 )
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 
-from . import IME
+from .. import IME
 
 
 def autopair(rime: IME) -> None:
