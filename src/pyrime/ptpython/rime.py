@@ -5,10 +5,11 @@ r"""Rime for Ptpython
 call librime on the basis of ``IME``.
 """
 
+from collections.abc import Callable
 from dataclasses import dataclass
 
-from prompt_toolkit.buffer import Buffer
 from prompt_toolkit.filters import Condition
+from prompt_toolkit.formatted_text.base import AnyFormattedText
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 from prompt_toolkit.keys import Keys
 from prompt_toolkit.layout.containers import (
@@ -21,7 +22,8 @@ from prompt_toolkit.layout.layout import Layout
 from prompt_toolkit.widgets import Frame
 from wcwidth import wcswidth
 
-from ..key import Key, ModifierKey
+from ..key import Key
+from ..keys import KEYS
 from ..rime import RimeBase
 from .ime import IME
 
@@ -30,7 +32,11 @@ from .ime import IME
 class Rime(RimeBase, IME):
     r"""RIME inherit IME."""
 
-    keys_set: set[tuple[Keys | str, ...]] = None  # type: ignore
+    keys_set: tuple[tuple[Keys | str, ...], ...] = KEYS
+
+    @property
+    def has_preedit(self) -> bool:
+        return self.window.height == 2
 
     def __post_init__(self) -> None:
         r"""Post init.
@@ -38,82 +44,19 @@ class Rime(RimeBase, IME):
         :rtype: None
         """
         super().__post_init__()
-        left, top = self.calculate()
-        self.window = Window(
-            BufferControl(buffer=Buffer()),
-            width=wcswidth(self.ui.cursor),
-            height=1,
-        )
-        self.window.content.buffer.text = self.ui.cursor  # type: ignore
+        self.content = BufferControl()
+        self.window = Window(self.content)
+        self.float = Float(Frame(self.window))
+        self.float.left, self.float.top = self.calculate()
         self.layout = Layout(
-            FloatContainer(  # type: ignore
+            FloatContainer(
                 self.repl.app.layout.container,
-                [
-                    Float(
-                        Frame(
-                            self.window,
-                        ),
-                        left=left,
-                        top=top,
-                    )
-                ],
+                [self.float],
             )
         )
-        if self.keys_set is None:
-            self.keys_set = {
-                ("s-tab",),
-                ("s-escape",),
-                ("escape", "backspace"),
-                ("escape", "enter"),
-                Key.new("enter", ModifierKey.Shift).keys,
-                Key.new("enter", ModifierKey.Control).keys,
-                Key.new("enter", ModifierKey.Shift | ModifierKey.Control).keys,
-                Key.new("enter", ModifierKey.Shift | ModifierKey.Alt).keys,
-                Key.new("enter", ModifierKey.Control | ModifierKey.Alt).keys,
-                Key.new(
-                    "enter",
-                    ModifierKey.Shift | ModifierKey.Control | ModifierKey.Alt,
-                ).keys,
-            }
-            for order in range(ord(" "), ord("~") + 1):
-                self.keys_set |= {(chr(order),)}
-            for number in range(1, 24):
-                self.keys_set |= {(f"f{number}",)}
-            for keyname in {
-                "insert",
-                "delete",
-                "up",
-                "down",
-                "left",
-                "right",
-                "home",
-                "end",
-                "pageup",
-                "pagedown",
-            }:
-                self.keys_set |= {
-                    (keyname,),
-                    ("c-" + keyname,),
-                    ("s-" + keyname,),
-                    ("c-s-" + keyname,),
-                    ("escape", keyname),
-                    ("escape", "c-" + keyname),
-                    ("escape", "s-" + keyname),
-                    ("escape", "c-s-" + keyname),
-                }
-            for order in range(ord("@"), ord("[")):
-                key = "c-" + chr(order).lower()
-                self.keys_set |= {(key,), ("escape", key)}
-            self.keys_set |= {("escape", "escape")}
-            for order in range(ord("[") + 1, ord("_")):
-                key = "c-" + chr(order)
-                self.keys_set |= {(key,), ("escape", key)}
-            for order in range(ord(" "), ord("~") + 1):
-                self.keys_set |= {("escape", chr(order))}
-
         for keys in self.keys_set:
 
-            @self.repl.add_key_binding(*keys, filter=self.mode(keys))  # type: ignore
+            @self.repl.add_key_binding(*keys, filter=self.mode(keys))
             def _(
                 event: KeyPressEvent, keys: tuple[Keys | str, ...] = keys
             ) -> None:
@@ -127,20 +70,20 @@ class Rime(RimeBase, IME):
                 """
                 self.key_binding(event, *keys)
 
-    def mode(self, keys: list[str]) -> Condition:
+    def mode(self, keys: tuple[Keys | str, ...]) -> Condition:
         r"""Mode.
 
         :param keys:
-        :type keys: list[str]
+        :type keys: tuple[Keys | str, ...]
         :rtype: Condition
         """
 
         @Condition
-        def _(keys: list[str] = keys) -> bool:
+        def _(keys: tuple[Keys | str, ...] = keys) -> bool:
             r""".
 
             :param keys:
-            :type keys: list[str]
+            :type keys: tuple[Keys | str, ...]
             :rtype: bool
             """
             if len(keys) == 1 == len(keys[0]):
@@ -151,6 +94,28 @@ class Rime(RimeBase, IME):
 
         return _
 
+    def exe(self, callback: Callable[[str], None], *keys: Key) -> None:
+        r"""Override ``RimeBase``.
+
+        :param self:
+        :param callback:
+        :type callback: Callable[[str], None]
+        :param keys:
+        :type keys: Key
+        :rtype: None
+        """
+        text, lines, col = self.draw(*keys)
+        callback(text)
+        self.content.buffer.text = "\n".join(lines)
+        self.window.height = len(lines)
+        self.window.width = (
+            max(wcswidth(line) for line in lines)
+            if self.window.height > 0
+            else 0
+        )
+        self.float.left, self.float.top = self.calculate()
+        self.float.left += col
+
     def key_binding(self, event: KeyPressEvent, *keys: Keys | str) -> None:
         r"""Key binding.
 
@@ -160,29 +125,44 @@ class Rime(RimeBase, IME):
         :type keys: Keys | str
         :rtype: None
         """
-        text, lines, col = self.draw(Key.new(keys))
-        self.has_preedit = len(lines) == 2
-        ui_text = "\n".join(lines)
-        event.cli.current_buffer.insert_text(text)
-        self.window.height = len(lines)
-        if len(lines):
-            self.window.width = max(wcswidth(line) for line in lines)
-        self.window.content.buffer.text = ui_text  # type: ignore
-        left, top = self.calculate()
-        left += col
-        self.repl.app.layout.container.floats[0].left = left  # type: ignore
-        self.repl.app.layout.container.floats[0].top = top  # type: ignore
+        self(
+            lambda text: event.cli.current_buffer.insert_text(text),
+            Key.new(keys),
+        )
+
+    @staticmethod
+    def stringifyAnyFormattedText(formatted_text: AnyFormattedText) -> str:
+        r"""stringify ``AnyFormattedText``.
+
+        :param formatted_text:
+        :type formatted_text: AnyFormattedText
+        :rtype: str
+        """
+        _formatted_text = getattr(
+            formatted_text, "__pt_formatted_text__", None
+        )
+        if _formatted_text:
+            formatted_text = _formatted_text
+        if isinstance(formatted_text, Callable):
+            formatted_text = formatted_text()
+
+        if isinstance(formatted_text, str):
+            return formatted_text
+        pwcs = ""
+        if isinstance(formatted_text, list):
+            for _, text, *_ in formatted_text:
+                pwcs += text
+        return pwcs
 
     def calculate(self) -> tuple[int, int]:
         r"""Calculate.
 
         :rtype: tuple[int, int]
         """
-        left = 0
-        for _, text in self.repl.all_prompt_styles[  # type: ignore
+        formatted_text = self.repl.all_prompt_styles[
             self.repl.prompt_style
-        ].in_prompt():
-            left += wcswidth(text)
+        ].in_prompt()
+        left = wcswidth(self.stringifyAnyFormattedText(formatted_text))
         top = 0
         if self.repl.app.layout.current_buffer:
             lines = self.repl.app.layout.current_buffer.text[
@@ -193,18 +173,12 @@ class Rime(RimeBase, IME):
                 left += wcswidth(lines[-1])
         return left, top
 
-    def swap(self):
-        r"""Swap layout."""
+    def switch(self) -> None:
+        r"""Override ``IMEBase``.
+
+        :rtype: None
+        """
         self.layout, self.repl.app.layout = (
             self.repl.app.layout,
             self.layout,
         )
-
-    def switch(self) -> None:
-        r"""Switch.
-
-        :rtype: None
-        """
-        self.swap()
-        if not self.is_enabled:
-            self.session.clear_composition()

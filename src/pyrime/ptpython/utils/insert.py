@@ -5,7 +5,7 @@
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 
 
-def insert(event: KeyPressEvent, pre: str, post: str) -> None:
+def insert(event: KeyPressEvent, pre: str = "(", post: str = ")") -> None:
     """Insert.
 
     :param event:

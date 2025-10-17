@@ -1,6 +1,21 @@
 """
-Gdb plugin for ptpython. Run
-``gdb -x /the/path/of/pyrime/prompt_toolkit/gdb.py`` and type `ptpython`.
+Gdb plugin for ptpython.
+
+``~/.config/gdb/gdbinit``:
+
+.. code-block:: gdb
+
+    source ~/.config/gdb/gdbinit.py
+
+``~/.config/gdb/gdbinit.py``:
+
+.. code-block:: python
+
+    from pyrime.ptpython.gdb import PtPythonCommand
+
+    PtPythonCommand()
+
+Then type ``ptpython``.
 
 Refer `<https://github.com/prompt-toolkit/ptpython/issues/546>`_
 """

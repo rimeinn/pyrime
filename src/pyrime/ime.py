@@ -2,7 +2,7 @@ r"""IME
 =======
 
 ``RimeBase`` only accept input and output to stdout. An effective IME can be
-toggle. So we wrap a ``IMEBase`` for ptpython, pynvim and ...
+toggled. So we wrap a ``IMEBase`` for ptpython, pynvim and ...
 """
 
 from dataclasses import dataclass

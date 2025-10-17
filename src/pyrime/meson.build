@@ -36,7 +36,9 @@ py.install_sources(
     'py.typed',
     'api.pyi',
     'dirs.py',
+    'ime.py',
     'key.py',
+    'keys.py',
     'rime.py',
     'session.py',
     'ui.py',
@@ -46,8 +48,9 @@ py.install_sources(
 py.install_sources(
   [
     'ptpython/__init__.py',
-    'ptpython/rime.py',
     'ptpython/gdb.py',
+    'ptpython/ime.py',
+    'ptpython/rime.py',
   ],
   subdir: 'pyrime/ptpython',
 )
@@ -61,7 +64,6 @@ py.install_sources(
 )
 py.install_sources(
   [
-    'ptpython/plugins/__init__.py',
     'ptpython/plugins/autopair.py',
     'ptpython/plugins/autosuggestion.py',
     'ptpython/plugins/smartinput.py',

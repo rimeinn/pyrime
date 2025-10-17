@@ -9,10 +9,11 @@ from .rime import RimeBase
 
 if __name__ == "__main__":
     rime = RimeBase()
+    rime.enable()
     while True:
         try:
             c = getch()
         except OverflowError:
             break
         key = Key(BasicKey(ord(c)))
-        rime(key)
+        rime(print, key)

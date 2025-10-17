@@ -16,13 +16,18 @@ from ..ime import IMEBase
 
 @dataclass
 class IME(IMEBase):
-    r"""IME is a class to provide basic support for ``ptpython``."""
+    r"""IME is a class to provide basic supports for ``ptpython`` 's plugins:
+    ``repl``, ``filter()``, ``enable()``, ``disable()``, ``toggle()``.
+    """
 
     repl: PythonRepl
-    has_preedit: bool = False
 
     def __post_init__(self):
         super().__post_init__()
+
+    @property
+    def has_preedit(self) -> bool:
+        return False
 
     def filter(self) -> Condition:
         r"""Filter. Only when ``preedit`` is empty, key binding works.

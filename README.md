@@ -117,7 +117,7 @@ from prompt_toolkit.filters.app import (
     vi_navigation_mode,
 )
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
-from pyrime.ptpython.plugins import RIME
+from pyrime.ptpython import RIME
 
 
 def configure(repl: PythonRepl) -> None:
@@ -131,7 +131,7 @@ def configure(repl: PythonRepl) -> None:
         rime.toggle()
 ```
 
-If you defined some key bindings which will disturb rime, try:
+If you have defined some key bindings which will disturb rime, try:
 
 ```python
     @repl.add_key_binding("c-h", filter=emacs_insert_mode & rime.filter())
@@ -152,7 +152,7 @@ If you want to exit rime in `vi_navigation_mode`, try:
         """
         event.app.editing_mode = EditingMode.VI
         event.app.vi_state.input_mode = InputMode.NAVIGATION
-        rime.conditional_disable()
+        rime.disable()
 
     # and a, I, A, ...
     @repl.add_key_binding("i", filter=vi_navigation_mode)
@@ -165,7 +165,7 @@ If you want to exit rime in `vi_navigation_mode`, try:
         """
         event.app.editing_mode = EditingMode.EMACS
         event.app.vi_state.input_mode = InputMode.INSERT
-        rime.conditional_enable()
+        rime.enable()
 ```
 
 It will remember rime status and enable it when reenter `vi_insert_mode` or
