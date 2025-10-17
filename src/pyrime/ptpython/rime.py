@@ -127,7 +127,7 @@ class Rime(RimeBase, IME):
             if len(keys) == 1 == len(keys[0]):
                 return self.is_enabled
             if len(keys) == 1 or len(keys) > 1 and keys[0] == "escape":
-                return self.preedit != ""
+                return self.has_preedit
             raise NotImplementedError
 
         return _
@@ -142,7 +142,7 @@ class Rime(RimeBase, IME):
         :rtype: None
         """
         text, lines, col = self.draw(Key.new(keys))
-        self.preedit = lines[0].strip(" " + self.ui.cursor)
+        self.has_preedit = len(lines) == 2
         ui_text = "\n".join(lines)
         event.cli.current_buffer.insert_text(text)
         self.window.height = len(lines)
@@ -168,7 +168,7 @@ class Rime(RimeBase, IME):
         """
         self.switch()
         self.is_enabled = False
-        self.preedit = ""
+        self.has_preedit = False
         self.session.clear_composition()
 
     def calculate(self) -> tuple[int, int]:

@@ -17,7 +17,7 @@ class IME:
     r"""IME is a class to provide basic support for ``ptpython``."""
 
     repl: PythonRepl
-    preedit: str = ""
+    has_preedit: bool = False
     is_enabled: bool = False
 
     def disable(self) -> None:
@@ -44,6 +44,6 @@ class IME:
 
             :rtype: bool
             """
-            return self.preedit == ""
+            return self.has_preedit
 
         return _
