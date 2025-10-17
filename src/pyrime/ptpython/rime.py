@@ -154,19 +154,19 @@ class Rime(RimeBase, IME):
         self.repl.app.layout.container.floats[0].left = left  # type: ignore
         self.repl.app.layout.container.floats[0].top = top  # type: ignore
 
-    def swap_layout(self):
+    def switch(self):
         r"""Swap layout."""
         (self.layout, self.repl.app.layout) = (  # type: ignore
             self.repl.app.layout,
             self.layout,
         )
 
-    def disable(self) -> None:
+    def _disable(self) -> None:
         r"""Disable.
 
         :rtype: None
         """
-        self.swap_layout()
+        self.switch()
         self.is_enabled = False
         self.preedit = ""
         self.session.clear_composition()
@@ -190,7 +190,7 @@ class Rime(RimeBase, IME):
             left += wcswidth(lines[-1])
         return left, top
 
-    def enable(self) -> None:
+    def _enable(self) -> None:
         r"""Enable.
 
         :rtype: None
@@ -216,25 +216,25 @@ class Rime(RimeBase, IME):
                 ],
             )
         )
-        self.swap_layout()
+        self.switch()
         self.is_enabled = True
 
-    def conditional_disable(self) -> None:
+    def disable(self) -> None:
         r"""Conditional disable.
 
         :rtype: None
         """
         if self.is_enabled:
             self.remember_rime = True
-            self.disable()
+            self._disable()
 
-    def conditional_enable(self) -> None:
+    def enable(self) -> None:
         r"""Conditional enable.
 
         :rtype: None
         """
         if self.remember_rime:
-            self.enable()
+            self._enable()
 
     def toggle(self) -> None:
         r"""Toggle.
@@ -242,6 +242,6 @@ class Rime(RimeBase, IME):
         :rtype: None
         """
         if self.is_enabled:
-            self.disable()
+            self._disable()
         else:
-            self.enable()
+            self._enable()

@@ -20,13 +20,13 @@ class IME:
     preedit: str = ""
     is_enabled: bool = False
 
-    def conditional_disable(self) -> None:
+    def disable(self) -> None:
         r"""Conditional disable.
 
         :rtype: None
         """
 
-    def conditional_enable(self) -> None:
+    def enable(self) -> None:
         r"""Conditional enable.
 
         :rtype: None
