@@ -17,7 +17,7 @@ from prompt_toolkit.key_binding.vi_state import InputMode
 from prompt_toolkit.selection import SelectionType
 
 from ...key import Key, ModifierKey
-from .. import IME
+from ..ime import IME
 
 
 def viemacs(rime: IME) -> None:

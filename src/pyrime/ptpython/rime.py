@@ -23,7 +23,7 @@ from wcwidth import wcswidth
 
 from ..key import Key, ModifierKey
 from ..rime import RimeBase
-from . import IME
+from .ime import IME
 
 
 @dataclass
