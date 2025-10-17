@@ -30,9 +30,6 @@ from .ime import IME
 class Rime(RimeBase, IME):
     r"""RIME inherit IME."""
 
-    remember_rime: bool = False
-    window: Window = None  # type: ignore
-    layout: Layout | None = None
     keys_set: set[tuple[Keys | str, ...]] = None  # type: ignore
 
     def __post_init__(self) -> None:
@@ -40,6 +37,28 @@ class Rime(RimeBase, IME):
 
         :rtype: None
         """
+        super().__post_init__()
+        left, top = self.calculate()
+        self.window = Window(
+            BufferControl(buffer=Buffer()),
+            width=wcswidth(self.ui.cursor),
+            height=1,
+        )
+        self.window.content.buffer.text = self.ui.cursor  # type: ignore
+        self.layout = Layout(
+            FloatContainer(  # type: ignore
+                self.repl.app.layout.container,
+                [
+                    Float(
+                        Frame(
+                            self.window,
+                        ),
+                        left=left,
+                        top=top,
+                    )
+                ],
+            )
+        )
         if self.keys_set is None:
             self.keys_set = {
                 ("s-tab",),
@@ -154,23 +173,6 @@ class Rime(RimeBase, IME):
         self.repl.app.layout.container.floats[0].left = left  # type: ignore
         self.repl.app.layout.container.floats[0].top = top  # type: ignore
 
-    def switch(self):
-        r"""Swap layout."""
-        (self.layout, self.repl.app.layout) = (  # type: ignore
-            self.repl.app.layout,
-            self.layout,
-        )
-
-    def _disable(self) -> None:
-        r"""Disable.
-
-        :rtype: None
-        """
-        self.switch()
-        self.is_enabled = False
-        self.has_preedit = False
-        self.session.clear_composition()
-
     def calculate(self) -> tuple[int, int]:
         r"""Calculate.
 
@@ -185,63 +187,24 @@ class Rime(RimeBase, IME):
         if self.repl.app.layout.current_buffer:
             lines = self.repl.app.layout.current_buffer.text[
                 : self.repl.app.layout.current_buffer.cursor_position
-            ].split("\n")
+            ].splitlines()
             top += len(lines)
-            left += wcswidth(lines[-1])
+            if top > 0:
+                left += wcswidth(lines[-1])
         return left, top
 
-    def _enable(self) -> None:
-        r"""Enable.
-
-        :rtype: None
-        """
-        left, top = self.calculate()
-        self.window = Window(
-            BufferControl(buffer=Buffer()),
-            width=wcswidth(self.ui.cursor),
-            height=1,
+    def swap(self):
+        r"""Swap layout."""
+        self.layout, self.repl.app.layout = (
+            self.repl.app.layout,
+            self.layout,
         )
-        self.window.content.buffer.text = self.ui.cursor  # type: ignore
-        self.layout = Layout(
-            FloatContainer(  # type: ignore
-                self.repl.app.layout.container,
-                [
-                    Float(
-                        Frame(
-                            self.window,
-                        ),
-                        left=left,
-                        top=top,
-                    )
-                ],
-            )
-        )
-        self.switch()
-        self.is_enabled = True
 
-    def disable(self) -> None:
-        r"""Conditional disable.
+    def switch(self) -> None:
+        r"""Switch.
 
         :rtype: None
         """
-        if self.is_enabled:
-            self.remember_rime = True
-            self._disable()
-
-    def enable(self) -> None:
-        r"""Conditional enable.
-
-        :rtype: None
-        """
-        if self.remember_rime:
-            self._enable()
-
-    def toggle(self) -> None:
-        r"""Toggle.
-
-        :rtype: None
-        """
-        if self.is_enabled:
-            self._disable()
-        else:
-            self._enable()
+        self.swap()
+        if not self.is_enabled:
+            self.session.clear_composition()

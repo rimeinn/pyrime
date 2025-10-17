@@ -11,26 +11,18 @@ from dataclasses import dataclass
 from prompt_toolkit.filters import Condition
 from ptpython.repl import PythonRepl
 
+from ..ime import IMEBase
+
 
 @dataclass
-class IME:
+class IME(IMEBase):
     r"""IME is a class to provide basic support for ``ptpython``."""
 
     repl: PythonRepl
     has_preedit: bool = False
-    is_enabled: bool = False
 
-    def disable(self) -> None:
-        r"""Conditional disable.
-
-        :rtype: None
-        """
-
-    def enable(self) -> None:
-        r"""Conditional enable.
-
-        :rtype: None
-        """
+    def __post_init__(self):
+        super().__post_init__()
 
     def filter(self) -> Condition:
         r"""Filter. Only when ``preedit`` is empty, key binding works.
@@ -44,6 +36,6 @@ class IME:
 
             :rtype: bool
             """
-            return self.has_preedit
+            return not self.has_preedit
 
         return _
