@@ -9,7 +9,7 @@ from .rime import RimeBase
 
 if __name__ == "__main__":
     rime = RimeBase()
-    rime.enable()
+    rime.is_enabled = True
     while True:
         try:
             c = getch()

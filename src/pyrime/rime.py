@@ -20,6 +20,7 @@ class RimeBase(IMEBase):
 
     session: Session = field(default_factory=Session)
     ui: UI = field(default_factory=UI)
+    enabled: bool = False
 
     def draw(self, *keys: Key) -> tuple[str, list[str], int]:
         r"""Wrap ``UI.draw()``.
@@ -57,10 +58,12 @@ class RimeBase(IMEBase):
         callback(text)
         print("\n".join(lines))
 
-    def disable(self) -> None:
-        r"""Override ``IMEBase``.
+    @property
+    def is_enabled(self) -> bool:
+        return self.enabled
 
-        :rtype: None
-        """
-        self.toggle(False)
-        self.session.clear_composition()
+    @is_enabled.setter
+    def is_enabled(self, enabled: bool) -> None:
+        if not enabled:
+            self.session.clear_composition()
+        self.enabled = enabled

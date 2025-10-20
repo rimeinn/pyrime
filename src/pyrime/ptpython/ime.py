@@ -17,13 +17,10 @@ from ..ime import IMEBase
 @dataclass
 class IME(IMEBase):
     r"""IME is a class to provide basic supports for ``ptpython`` 's plugins:
-    ``repl``, ``filter()``, ``enable()``, ``disable()``, ``toggle()``.
+    ``repl``, ``filter()``, ``is_enabled``.
     """
 
     repl: PythonRepl
-
-    def __post_init__(self):
-        super().__post_init__()
 
     @property
     def has_preedit(self) -> bool:

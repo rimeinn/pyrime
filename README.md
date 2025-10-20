@@ -128,7 +128,7 @@ def configure(repl: PythonRepl) -> None:
         filter=(emacs_insert_mode | vi_insert_mode) & rime.filter(),
     )
     def _(event: KeyPressEvent) -> None:
-        rime.toggle()
+        rime.is_enabled = not rime.is_enabled
 ```
 
 If you have defined some key bindings which will disturb rime, try:
@@ -136,7 +136,7 @@ If you have defined some key bindings which will disturb rime, try:
 ```python
     @repl.add_key_binding("c-h", filter=emacs_insert_mode & rime.filter())
     def _(event: KeyPressEvent) -> None:
-        rime.toggle()
+        rime.is_enabled = not rime.is_enabled
 ```
 
 If you want to exit rime in `vi_navigation_mode`, try:
@@ -152,7 +152,7 @@ If you want to exit rime in `vi_navigation_mode`, try:
         """
         event.app.editing_mode = EditingMode.VI
         event.app.vi_state.input_mode = InputMode.NAVIGATION
-        rime.disable()
+        rime.is_enabled = False
 
     # and a, I, A, ...
     @repl.add_key_binding("i", filter=vi_navigation_mode)
@@ -165,7 +165,7 @@ If you want to exit rime in `vi_navigation_mode`, try:
         """
         event.app.editing_mode = EditingMode.EMACS
         event.app.vi_state.input_mode = InputMode.INSERT
-        rime.enable()
+        rime.is_enabled = True
 ```
 
 It will remember rime status and enable it when reenter `vi_insert_mode` or

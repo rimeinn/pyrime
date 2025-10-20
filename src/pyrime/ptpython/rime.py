@@ -43,7 +43,6 @@ class Rime(RimeBase, IME):
 
         :rtype: None
         """
-        super().__post_init__()
         self.content = BufferControl()
         self.window = Window(self.content)
         self.float = Float(Frame(self.window))
@@ -173,12 +172,17 @@ class Rime(RimeBase, IME):
                 left += wcswidth(lines[-1])
         return left, top
 
-    def switch(self) -> None:
-        r"""Override ``IMEBase``.
+    @property
+    def is_enabled(self) -> bool:
+        return super().is_enabled
 
-        :rtype: None
-        """
-        self.layout, self.repl.app.layout = (
-            self.repl.app.layout,
-            self.layout,
-        )
+    @is_enabled.setter
+    def is_enabled(self, enabled: bool) -> None:
+        if super().is_enabled != enabled:
+            self.layout, self.repl.app.layout = (
+                self.repl.app.layout,
+                self.layout,
+            )
+        fset = RimeBase.is_enabled.fset
+        if fset:
+            fset(self, enabled)
