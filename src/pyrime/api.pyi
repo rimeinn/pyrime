@@ -50,6 +50,9 @@ class Traits:
         :param self:
         :rtype: None
         """
+        for dir in self.shared_data_dir, self.user_data_dir, self.log_dir:
+            if not os.path.isdir(dir):
+                raise NotADirectoryError
         os.makedirs(self.log_dir, exist_ok=True)
         c_min_log_level: c.int = self.min_log_level.value
         traits: RimeTraits = RimeTraits(
