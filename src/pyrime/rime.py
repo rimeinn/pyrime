@@ -33,6 +33,8 @@ class RimeBase(IMEBase):
             if not self.session.process_key(key.code, key.mask):
                 return (
                     key.basic.pt_name
+                    if key.basic.pt_name != "space"
+                    else " "
                     if key.modifier == ModifierKey.NULL
                     else "",
                     [self.ui.cursor],
