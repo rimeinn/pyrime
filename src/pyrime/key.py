@@ -19,7 +19,7 @@ import json
 import os
 from dataclasses import dataclass
 from enum import Enum, Flag, unique
-from typing import TYPE_CHECKING, Self
+from typing import TYPE_CHECKING, Self, cast
 
 if TYPE_CHECKING:
     from prompt_toolkit.keys import Keys
@@ -266,6 +266,28 @@ class Key:
                 elif modifier == ModifierKey.Control:
                     name = "c-" + name
         return tuple(keys)
+
+    @property
+    def key(self) -> str:
+        r"""Get vim key name.
+
+        :param self:
+        :rtype: str
+        """
+        name = self.basic.name
+        if self.modifier == ModifierKey.NULL:
+            return name
+        for modifier in (
+            ModifierKey.Control,
+            ModifierKey.Shift,
+            ModifierKey.Alt,
+        ):
+            if self.modifier | modifier == self.modifier:
+                prefix = cast(str, modifier.name)[0]
+                if prefix in {"C", "S"} and len(name) == 1:
+                    name = name.upper()
+                name = f"{prefix}-{name}"
+        return f"<{name}>"
 
     @classmethod
     def new(
