@@ -2,6 +2,7 @@ r"""Draw UI
 ===========
 
 Draw UI of IME.
+Refer <https://github.com/rimeinn/ime.nvim/blob/0.0.5/packages/ime/lua/ime/ui.lua>
 """
 
 from dataclasses import dataclass

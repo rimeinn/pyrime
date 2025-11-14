@@ -3,6 +3,8 @@ r"""IME
 
 ``RimeBase`` only accept input and output to stdout. An effective IME can be
 toggled. So we wrap a ``IMEBase`` for ptpython, pynvim and ...
+
+Refer <https://github.com/rimeinn/ime.nvim/blob/0.0.5/packages/ime/lua/ime/ime.lua>
 """
 
 from dataclasses import dataclass

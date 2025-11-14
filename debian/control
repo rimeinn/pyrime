@@ -22,4 +22,4 @@ Architecture: amd64 arm64 armel armhf i386 mips64el mipsel powerpc s390x
 Multi-Arch: foreign
 Depends: librime1, ${misc:Depends}, ${python3:Depends}, ${shlibs:Depends}
 Description: rime for python, attached to prompt-toolkit keybindings for some prompt-toolkit applications such as ptpython
-Recommends: ptpython, python3-prompt-toolkit, python3-colorama
+Recommends: python3-wcwidth, ptpython, python3-pynvim, python3-colorama

@@ -35,6 +35,7 @@ color = ["colorama"]
 dev = ["pytest-cov", "wcwidth", "prompt-toolkit"]
 prompt-toolkit = ["prompt-toolkit"]
 ptpython = ["ptpython", "wcwidth"]
+nvim = ["pynvim", "wcwidth"]
 
 [[project.authors]]
 name = "Wu, Zhenyu"

@@ -6,7 +6,7 @@ call librime on the basis of ``IME``.
 """
 
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from prompt_toolkit.filters import Condition
 from prompt_toolkit.formatted_text.base import AnyFormattedText
@@ -23,16 +23,17 @@ from prompt_toolkit.widgets import Frame
 from wcwidth import wcswidth
 
 from ..key import Key
-from ..keys import KEYS
 from ..rime import RimeBase
 from .ime import IME
+from .keymap import KEYS
 
 
 @dataclass
 class Rime(RimeBase, IME):
-    r"""RIME inherit IME."""
+    r"""Rime for ptpython."""
 
     keys_set: tuple[tuple[Keys | str, ...], ...] = KEYS
+    content: BufferControl = field(default_factory=BufferControl)
 
     @property
     def has_preedit(self) -> bool:
@@ -43,7 +44,6 @@ class Rime(RimeBase, IME):
 
         :rtype: None
         """
-        self.content = BufferControl()
         self.window = Window(self.content)
         self.float = Float(Frame(self.window))
         self.float.left, self.float.top = self.calculate()

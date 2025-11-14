@@ -1,5 +1,7 @@
 r"""Rime
 ========
+
+Refer <https://github.com/rimeinn/rime.nvim/blob/main/lua/rime/rime.lua>
 """
 
 from collections.abc import Callable

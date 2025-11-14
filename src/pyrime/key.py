@@ -13,6 +13,8 @@ as ``[tab, "A"]``, ``KEY_ALIASES.get('tab', 'tab')`` will return
 Rime supports more keys, such as ``CapsLock``. Prompt-toolkit supports input
 many keys at same time, such as ``Control + I, Shift + A``. We only support
 their intersection.
+
+Refer <https://github.com/rimeinn/ime.nvim/blob/0.0.5/packages/ime/lua/ime/key.lua>
 """
 
 import json

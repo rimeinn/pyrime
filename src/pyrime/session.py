@@ -1,4 +1,9 @@
-r"""Wrap rime as OOP APIs."""
+r"""Session
+===========
+
+Wrap rime as OOP APIs.
+Refer <https://github.com/rimeinn/rime.nvim/blob/main/lua/rime/session.lua>
+"""
 
 from dataclasses import dataclass, field
 

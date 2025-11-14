@@ -4,7 +4,7 @@ r"""Keys
 Provide ``KEYS`` for key bindings.
 """
 
-from .key import Key, ModifierKey
+from ..key import Key, ModifierKey
 
 KEYS = {
     ("s-tab",),
