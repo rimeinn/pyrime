@@ -1,4 +1,8 @@
-"""cython file to wrap ``RimeAPI``"""
+r"""API
+=======
+
+Refer <https://github.com/rimeinn/rime.nvim/blob/main/lua/rime/traits.lua>
+"""
 
 import os
 from dataclasses import dataclass
@@ -40,7 +44,7 @@ class Traits:
             for dir in site_data_dir("rime-data", multipath=True).split(":")
             if os.path.isdir(dir)
         ),
-        os.path.join(os.getenv("PREFIX", "/sdcard"), "rime-data"),
+        "/sdcard/rime-data",
     )
     user_data_dir: str = next(
         (
@@ -66,8 +70,8 @@ class Traits:
     def __post_init__(self) -> None:
         r"""Initialize.
         gentoo prefix will change ``$XDG_DATA_DIRS``,
-        however termux will not and only change ``$PREFIX``.
-        Use trime as fallback of data directories.
+        TODO: Android termux only change ``$PREFIX``, not ``$XDG_DATA_DIRS``.
+        Use trime data paths as the fallback of data directories.
 
         :param self:
         :rtype: None
