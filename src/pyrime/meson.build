@@ -38,7 +38,6 @@ py.install_sources(
     'dirs.py',
     'ime.py',
     'key.py',
-    'keys.py',
     'rime.py',
     'session.py',
     'ui.py',
@@ -50,9 +49,19 @@ py.install_sources(
     'ptpython/__init__.py',
     'ptpython/gdb.py',
     'ptpython/ime.py',
+    'ptpython/keymap.py',
     'ptpython/rime.py',
   ],
   subdir: 'pyrime/ptpython',
+)
+py.install_sources(
+  [
+    'nvim/__init__.py',
+    'nvim/keymap.py',
+    'nvim/rime.py',
+    'nvim/win.py',
+  ],
+  subdir: 'pyrime/nvim',
 )
 py.install_sources(
   [
