@@ -35,7 +35,6 @@ py.install_sources(
     '__main__.py',
     'py.typed',
     'api.pyi',
-    'dirs.py',
     'ime.py',
     'key.py',
     'rime.py',

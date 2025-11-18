@@ -17,6 +17,8 @@ from cython.cimports.rime_api import (
     RimeTraits,
     rime_get_api,
 )
+from platformdirs import site_data_dir, user_config_dir
+from platformdirs import user_data_dir as _user_data_dir
 
 from . import (
     Candidate,
@@ -29,13 +31,30 @@ from . import (
     __version__,
 )
 from . import __name__ as NAME
-from .dirs import log_dir, shared_data_dir, user_data_dir
 
 @dataclass
 class Traits:
-    shared_data_dir: str = shared_data_dir
-    user_data_dir: str = user_data_dir
-    log_dir: str = log_dir
+    shared_data_dir: str = next(
+        (
+            dir
+            for dir in site_data_dir("rime-data", multipath=True).split(":")
+            if os.path.isdir(dir)
+        ),
+        os.path.join(os.getenv("PREFIX", "/sdcard"), "rime-data"),
+    )
+    user_data_dir: str = next(
+        (
+            dir
+            for dir in (
+                user_config_dir("ibus", version="rime"),
+                _user_data_dir("fcitx5", version="rime"),
+                user_config_dir("fcitx", version="rime"),
+            )
+            if os.path.isdir(dir)
+        ),
+        "/sdcard/rime",
+    )
+    log_dir: str = _user_data_dir("ptpython", version="rime")
     distribution_name: str = "Rime"
     distribution_code_name: str = NAME
     distribution_version: str = __version__
@@ -45,7 +64,10 @@ class Traits:
     address: int = 0
 
     def __post_init__(self) -> None:
-        r"""Initialize data size.
+        r"""Initialize.
+        gentoo prefix will change ``$XDG_DATA_DIRS``,
+        however termux will not and only change ``$PREFIX``.
+        Use trime as fallback of data directories.
 
         :param self:
         :rtype: None
