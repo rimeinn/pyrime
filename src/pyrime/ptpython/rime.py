@@ -9,6 +9,8 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 
 from prompt_toolkit.filters import Condition
+from prompt_toolkit.filters.app import emacs_insert_mode, vi_insert_mode
+from prompt_toolkit.filters.base import Filter
 from prompt_toolkit.formatted_text.base import AnyFormattedText
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 from prompt_toolkit.keys import Keys
@@ -55,7 +57,7 @@ class Rime(RimeBase, IME):
         )
         for keys in self.keys_set:
 
-            @self.repl.add_key_binding(*keys, filter=self.mode(keys))
+            @self.repl.add_key_binding(*keys, filter=self.keys_available(keys))
             def _(
                 event: KeyPressEvent, keys: tuple[Keys | str, ...] = keys
             ) -> None:
@@ -68,30 +70,6 @@ class Rime(RimeBase, IME):
                 :rtype: None
                 """
                 self.key_binding(event, *keys)
-
-    def mode(self, keys: tuple[Keys | str, ...]) -> Condition:
-        r"""Mode.
-
-        :param keys:
-        :type keys: tuple[Keys | str, ...]
-        :rtype: Condition
-        """
-
-        @Condition
-        def _(keys: tuple[Keys | str, ...] = keys) -> bool:
-            r""".
-
-            :param keys:
-            :type keys: tuple[Keys | str, ...]
-            :rtype: bool
-            """
-            if len(keys) == 1 == len(keys[0]):
-                return self.is_enabled
-            if len(keys) == 1 or len(keys) > 1 and keys[0] == "escape":
-                return self.has_preedit
-            raise NotImplementedError
-
-        return _
 
     def exe(self, callback: Callable[[str], None], *keys: Key) -> None:
         r"""Override ``RimeBase``.
@@ -176,7 +154,10 @@ class Rime(RimeBase, IME):
 
     @is_enabled.setter
     def is_enabled(self, enabled: bool) -> None:
-        if super().is_enabled == enabled:
+        if (
+            super().is_enabled == enabled
+            or not (emacs_insert_mode & vi_insert_mode)()
+        ):
             return
         self.iminsert = self.is_enabled
         self.layout, self.repl.app.layout = (
@@ -186,3 +167,53 @@ class Rime(RimeBase, IME):
         fset = RimeBase.is_enabled.fset
         if fset:
             fset(self, enabled)
+
+    @property
+    def rime_available(self) -> Condition:
+        r"""Filter. Only when ``preedit`` is not available, key binding works.
+
+        :rtype: Filter
+        """
+
+        @Condition
+        def _() -> bool:
+            r""".
+
+            :rtype: bool
+            """
+            return self.is_enabled
+
+        return _
+
+    @staticmethod
+    def keys_is_a_char(keys: tuple[Keys | str, ...]) -> Condition:
+        r"""Mode.
+
+        :param keys:
+        :type keys: tuple[Keys | str, ...]
+        :rtype: Condition
+        """
+
+        @Condition
+        def _(keys: tuple[Keys | str, ...] = keys) -> bool:
+            r""".
+
+            :param keys:
+            :type keys: tuple[Keys | str, ...]
+            :rtype: bool
+            """
+            return len(keys) == 1 == len(keys[0])
+
+        return _
+
+    def keys_available(self, keys) -> Filter:
+        r"""Filter.
+
+        :param keys:
+        :type keys: tuple[Keys | str, ...]
+        :rtype: Filter
+        """
+
+        return (
+            self.keys_is_a_char(keys) & self.rime_available
+        ) | self.preedit_available

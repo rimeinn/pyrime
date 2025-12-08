@@ -6,7 +6,6 @@ Add spaces around operators.
 Refer `vim-smartinput <https://github.com/kana/vim-smartinput>`_.
 """
 
-from prompt_toolkit.filters.app import emacs_insert_mode, vi_insert_mode
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 
 from ..ime import IME
@@ -22,9 +21,7 @@ def smartinput(rime: IME) -> None:
     repl = rime.repl
 
     # One {{{1 #
-    @repl.add_key_binding(
-        ",", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding(",", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -42,9 +39,7 @@ def smartinput(rime: IME) -> None:
 
     # Two {{{1 #
     # Operation {{{2 #
-    @repl.add_key_binding(
-        "+", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("+", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -58,9 +53,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" + ")
 
-    @repl.add_key_binding(
-        "@", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("@", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -77,9 +70,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" @ ")
 
-    @repl.add_key_binding(
-        "*", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("*", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -93,9 +84,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" * ")
 
-    @repl.add_key_binding(
-        "*", "*", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("*", "*", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -109,9 +98,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" ** ")
 
-    @repl.add_key_binding(
-        "/", "/", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("/", "/", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -125,9 +112,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" // ")
 
-    @repl.add_key_binding(
-        "%", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("%", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -144,9 +129,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" % ")
 
-    @repl.add_key_binding(
-        "&", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("&", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -160,9 +143,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" & ")
 
-    @repl.add_key_binding(
-        "|", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("|", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -176,9 +157,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" | ")
 
-    @repl.add_key_binding(
-        "^", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("^", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -192,9 +171,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" ^ ")
 
-    @repl.add_key_binding(
-        "<", "<", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("<", "<", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -208,9 +185,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" << ")
 
-    @repl.add_key_binding(
-        ">", ">", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding(">", ">", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -227,9 +202,7 @@ def smartinput(rime: IME) -> None:
     # 1}}} Operation #
 
     # Relation {{{2 #
-    @repl.add_key_binding(
-        "<", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("<", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -243,9 +216,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" < ")
 
-    @repl.add_key_binding(
-        ">", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding(">", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -259,9 +230,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" > ")
 
-    @repl.add_key_binding(
-        ":", "=", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding(":", "=", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -275,9 +244,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" := ")
 
-    @repl.add_key_binding(
-        "=", "=", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("=", "=", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -291,9 +258,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" == ")
 
-    @repl.add_key_binding(
-        "!", "=", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("!", "=", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -307,9 +272,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" != ")
 
-    @repl.add_key_binding(
-        "<", "=", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("<", "=", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -323,9 +286,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" <= ")
 
-    @repl.add_key_binding(
-        ">", "=", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding(">", "=", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -342,9 +303,7 @@ def smartinput(rime: IME) -> None:
     # 1}}} Relation #
 
     # Assign {{{2 #
-    @repl.add_key_binding(
-        "=", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("=", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -358,9 +317,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" = ")
 
-    @repl.add_key_binding(
-        "+", "=", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("+", "=", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -374,9 +331,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" += ")
 
-    @repl.add_key_binding(
-        "-", "=", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("-", "=", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -390,9 +345,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" -= ")
 
-    @repl.add_key_binding(
-        "@", "=", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("@", "=", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -406,9 +359,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" @= ")
 
-    @repl.add_key_binding(
-        "*", "=", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("*", "=", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -422,9 +373,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" *= ")
 
-    @repl.add_key_binding(
-        "/", "=", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("/", "=", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -438,12 +387,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" /= ")
 
-    @repl.add_key_binding(
-        "*",
-        "*",
-        "=",
-        filter=(emacs_insert_mode | vi_insert_mode) & rime.filter(),
-    )
+    @repl.add_key_binding("*", "*", "=", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -457,12 +401,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" **= ")
 
-    @repl.add_key_binding(
-        "/",
-        "/",
-        "=",
-        filter=(emacs_insert_mode | vi_insert_mode) & rime.filter(),
-    )
+    @repl.add_key_binding("/", "/", "=", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -476,9 +415,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" //= ")
 
-    @repl.add_key_binding(
-        "%", "=", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("%", "=", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -492,9 +429,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" %= ")
 
-    @repl.add_key_binding(
-        "&", "=", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("&", "=", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -508,9 +443,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" &= ")
 
-    @repl.add_key_binding(
-        "|", "=", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("|", "=", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -524,9 +457,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" |= ")
 
-    @repl.add_key_binding(
-        "^", "=", filter=(emacs_insert_mode | vi_insert_mode) & rime.filter()
-    )
+    @repl.add_key_binding("^", "=", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -540,12 +471,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" ^= ")
 
-    @repl.add_key_binding(
-        "<",
-        "<",
-        "=",
-        filter=(emacs_insert_mode | vi_insert_mode) & rime.filter(),
-    )
+    @repl.add_key_binding("<", "<", "=", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -559,12 +485,7 @@ def smartinput(rime: IME) -> None:
         else:
             b.insert_text(" <<= ")
 
-    @repl.add_key_binding(
-        ">",
-        ">",
-        "=",
-        filter=(emacs_insert_mode | vi_insert_mode) & rime.filter(),
-    )
+    @repl.add_key_binding(">", ">", "=", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 

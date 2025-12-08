@@ -9,6 +9,8 @@ r"""IME
 from dataclasses import dataclass
 
 from prompt_toolkit.filters import Condition
+from prompt_toolkit.filters.app import emacs_insert_mode, vi_insert_mode
+from prompt_toolkit.filters.base import Filter
 from ptpython.repl import PythonRepl
 
 from ..ime import IMEBase
@@ -27,8 +29,9 @@ class IME(IMEBase):
     def has_preedit(self) -> bool:
         return False
 
-    def filter(self) -> Condition:
-        r"""Filter. Only when ``preedit`` is empty, key binding works.
+    @property
+    def preedit_available(self) -> Condition:
+        r"""Filter. Only when ``preedit`` is not available, key binding works.
 
         :rtype: Condition
         """
@@ -39,6 +42,15 @@ class IME(IMEBase):
 
             :rtype: bool
             """
-            return not self.has_preedit
+            return self.has_preedit
 
         return _
+
+    @property
+    def insert_mode(self) -> Filter:
+        r"""Filter. Only when ``preedit`` is not available, key binding works.
+
+        :rtype: Filter
+        """
+
+        return (emacs_insert_mode | vi_insert_mode) & ~self.preedit_available

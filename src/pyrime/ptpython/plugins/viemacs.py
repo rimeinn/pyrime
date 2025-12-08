@@ -177,29 +177,29 @@ def viemacs(rime: IME) -> None:
 
     @repl.add_key_binding(
         *Key.new("enter", ModifierKey.Shift).keys,
-        filter=rime.filter(),
+        filter=~rime.preedit_available,
     )
     @repl.add_key_binding(
         *Key.new("enter", ModifierKey.Control).keys,
-        filter=rime.filter(),
+        filter=~rime.preedit_available,
     )
     @repl.add_key_binding(
         *Key.new("enter", ModifierKey.Control | ModifierKey.Shift).keys,
-        filter=rime.filter(),
+        filter=~rime.preedit_available,
     )
     @repl.add_key_binding(
         *Key.new("enter", ModifierKey.Shift | ModifierKey.Alt).keys,
-        filter=rime.filter(),
+        filter=~rime.preedit_available,
     )
     @repl.add_key_binding(
         *Key.new("enter", ModifierKey.Control | ModifierKey.Alt).keys,
-        filter=rime.filter(),
+        filter=~rime.preedit_available,
     )
     @repl.add_key_binding(
         *Key.new(
             "enter", ModifierKey.Control | ModifierKey.Shift | ModifierKey.Alt
         ).keys,
-        filter=rime.filter(),
+        filter=~rime.preedit_available,
     )
     def _(event: KeyPressEvent) -> None:
         """`<https://github.com/prompt-toolkit/python-prompt-toolkit/issues/2006>_`
