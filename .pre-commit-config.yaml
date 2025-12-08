@@ -61,7 +61,7 @@ repos:
         additional_dependencies:
           - mdformat-pyproject
           - mdformat-gfm
-          # - mdformat-myst
+          - mdformat-myst
           - mdformat-toc
           - mdformat-deflist
           - mdformat-beautysh
@@ -69,13 +69,13 @@ repos:
           - mdformat-config
           - mdformat-web
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: v0.19.1
+    rev: v0.20.0
     hooks:
       - id: markdownlint-cli2
         additional_dependencies:
           - markdown-it-texmath
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.7
+    rev: v0.14.8
     hooks:
       - id: ruff-check
       - id: ruff-format
