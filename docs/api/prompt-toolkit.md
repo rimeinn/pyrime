@@ -1,18 +1,18 @@
-# prompt-toolkit
+# pyrime
 
-```{autofile} ../../src/*/prompt_toolkit/*.py
+```{autofile} ../../src/*/pyrime/*.py
 ---
 module:
 ---
 ```
 
-```{autofile} ../../src/*/prompt_toolkit/utils/*.py
+```{autofile} ../../src/*/pyrime/utils/*.py
 ---
 module:
 ---
 ```
 
-```{autofile} ../../src/*/prompt_toolkit/plugins/*.py
+```{autofile} ../../src/*/pyrime/bindings/*.py
 ---
 module:
 ---
