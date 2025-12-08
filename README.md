@@ -105,6 +105,15 @@ pip install pyrime[cli]
 python -m pyrime
 ```
 
+By default, pyrime search ibus/fcitx/trime's config paths. You can see where it
+found:
+
+```python
+from pyrime.api import Traits
+
+print(Traits.user_data_dir)
+```
+
 ### Frontend
 
 `~/.config/ptpython/config.py`:
@@ -128,12 +137,29 @@ def configure(repl: PythonRepl) -> None:
         rime.is_enabled = not rime.is_enabled
 ```
 
+If you have a special rime config path, you can:
+
+```python
+import os
+
+from ptpython.repl import PythonRepl
+from pyrime.session import Session
+from pyrime.api import Traits
+
+
+def configure(repl: PythonRepl) -> None:
+
+    rime = Rime(
+        repl, Session(Traits(user_config_dir=os.path.expand("~/.config/rime")))
+    )
+```
+
 If you have defined some key bindings which will disturb rime, try:
 
 ```python
-    @repl.add_key_binding("c-h", filter=emacs_insert_mode & rime.filter())
+    @repl.add_key_binding("c-h", filter=emacs_insert_mode & ~rime.preedit_available())
     def _(event: KeyPressEvent) -> None:
-        rime.is_enabled = not rime.is_enabled
+        pass
 ```
 
 If you want to exit rime in `vi_navigation_mode`, try:
@@ -147,9 +173,10 @@ If you want to exit rime in `vi_navigation_mode`, try:
         :type event: KeyPressEvent
         :rtype: None
         """
+        # rime.is_enabled will be stored to rime.iminsert
+        rime.is_enabled = False
         event.app.editing_mode = EditingMode.VI
         event.app.vi_state.input_mode = InputMode.NAVIGATION
-        rime.is_enabled = False
 
     # and a, I, A, ...
     @repl.add_key_binding("i", filter=vi_navigation_mode)
@@ -162,19 +189,20 @@ If you want to exit rime in `vi_navigation_mode`, try:
         """
         event.app.editing_mode = EditingMode.EMACS
         event.app.vi_state.input_mode = InputMode.INSERT
+        # restore rime
         rime.is_enabled = rime.iminsert
 ```
 
 It will remember rime status and enable it when reenter `vi_insert_mode` or
 `emacs_insert_mode`.
 
-Some utility functions are defined in this project. Refer
-[my ptpython config](https://github.com/rimeinn/rimeinn/blob/main/.config/ptpython/config.py)
-to know more.
+Some predefined key bindings are
+[provided](https://github.com/rimeinn/pyrime/tree/main/src/pyrime/ptpython/bindings).
 
 ## Related Projects
 
 - [A collection](https://github.com/rime/librime#frontends) of rime frontends
-- [A collection](https://github.com/rimeinn/rime.nvim#bindings) of rime bindings
+- [A collection](https://github.com/rimeinn/ime.nvim/#librime) of rime frontends
+  for neovim
 - [A collection](https://github.com/rimeinn/rime.nvim#translators-and-filters)
   of rime translators and filters

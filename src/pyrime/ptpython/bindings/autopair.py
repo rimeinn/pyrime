@@ -4,27 +4,33 @@ r"""Autopair
 Refer `zsh-autopair <https://github.com/hlissner/zsh-autopair>`_.
 """
 
+from typing import TYPE_CHECKING
+
 from prompt_toolkit.key_binding.bindings.named_commands import (
     backward_char,
     backward_delete_char,
     delete_char,
     forward_char,
 )
+from prompt_toolkit.key_binding.key_bindings import KeyBindings
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 
-from ..rime import Rime
+if TYPE_CHECKING:
+    from ..rime import Rime
 
 
-def autopair(rime: Rime) -> None:
+def load_autopair_bindings(rime: "Rime") -> KeyBindings:
     r"""Autopair.
 
     :param rime:
     :type rime: Rime
-    :rtype: None
+    :rtype: KeyBindings
     """
-    repl = rime.repl
+    key_bindings = KeyBindings()
+    insert_mode = rime.insert_mode
+    handle = key_bindings.add
 
-    @repl.add_key_binding("c-h", filter=rime.insert_mode)  # type: ignore
+    @handle("c-h", filter=insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -53,7 +59,7 @@ def autopair(rime: Rime) -> None:
                 break
         backward_delete_char(event)
 
-    @repl.add_key_binding("[", filter=rime.insert_mode)  # type: ignore
+    @handle("[", filter=insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -64,7 +70,7 @@ def autopair(rime: Rime) -> None:
         event.cli.current_buffer.insert_text("[]")
         backward_char(event)
 
-    @repl.add_key_binding("]", filter=rime.insert_mode)  # type: ignore
+    @handle("]", filter=insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -78,7 +84,7 @@ def autopair(rime: Rime) -> None:
         else:
             forward_char(event)
 
-    @repl.add_key_binding("(", filter=rime.insert_mode)  # type: ignore
+    @handle("(", filter=insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -89,7 +95,7 @@ def autopair(rime: Rime) -> None:
         event.cli.current_buffer.insert_text("()")
         backward_char(event)
 
-    @repl.add_key_binding(")", filter=rime.insert_mode)  # type: ignore
+    @handle(")", filter=insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -103,7 +109,7 @@ def autopair(rime: Rime) -> None:
         else:
             forward_char(event)
 
-    @repl.add_key_binding("{", filter=rime.insert_mode)  # type: ignore
+    @handle("{", filter=insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -114,7 +120,7 @@ def autopair(rime: Rime) -> None:
         event.cli.current_buffer.insert_text("{}")
         backward_char(event)
 
-    @repl.add_key_binding("}", filter=rime.insert_mode)  # type: ignore
+    @handle("}", filter=insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -128,7 +134,7 @@ def autopair(rime: Rime) -> None:
         else:
             forward_char(event)
 
-    @repl.add_key_binding("'", filter=rime.insert_mode)  # type: ignore
+    @handle("'", filter=insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -143,7 +149,7 @@ def autopair(rime: Rime) -> None:
         else:
             forward_char(event)
 
-    @repl.add_key_binding("`", filter=rime.insert_mode)  # type: ignore
+    @handle("`", filter=insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -158,7 +164,7 @@ def autopair(rime: Rime) -> None:
         else:
             forward_char(event)
 
-    @repl.add_key_binding('"', filter=rime.insert_mode)  # type: ignore
+    @handle('"', filter=insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -172,3 +178,5 @@ def autopair(rime: Rime) -> None:
             backward_char(event)
         else:
             forward_char(event)
+
+    return key_bindings

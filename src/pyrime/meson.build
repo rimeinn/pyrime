@@ -45,10 +45,7 @@ py.install_sources(
 )
 py.install_sources(
   [
-    'ptpython/__init__.py',
     'ptpython/gdb.py',
-    'ptpython/ime.py',
-    'ptpython/keymap.py',
     'ptpython/rime.py',
   ],
   subdir: 'pyrime/ptpython',
@@ -65,19 +62,23 @@ py.install_sources(
 py.install_sources(
   [
     'ptpython/utils/ansi.py',
-    'ptpython/utils/insert.py',
     'ptpython/utils/prompt_style.py',
   ],
   subdir: 'pyrime/ptpython/utils',
 )
 py.install_sources(
   [
-    'ptpython/plugins/autopair.py',
-    'ptpython/plugins/autosuggestion.py',
-    'ptpython/plugins/smartinput.py',
-    'ptpython/plugins/viemacs.py',
+    'ptpython/bindings/__init__.py',
+    'ptpython/bindings/rime.py',
+    'ptpython/bindings/autopair.py',
+    'ptpython/bindings/autosuggestion.py',
+    'ptpython/bindings/smartinput.py',
+    'ptpython/bindings/viemacs.py',
+    'ptpython/bindings/extra.py',
+    'ptpython/bindings/autocorrect.py',
+    'ptpython/bindings/autoinsert.py',
   ],
-  subdir: 'pyrime/ptpython/plugins',
+  subdir: 'pyrime/ptpython/bindings',
 )
 py.install_sources(
   ['assets/json/keys.json', 'assets/json/modifiers.json'],

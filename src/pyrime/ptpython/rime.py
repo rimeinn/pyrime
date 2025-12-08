@@ -12,7 +12,10 @@ from prompt_toolkit.buffer import Buffer
 from prompt_toolkit.filters.app import emacs_insert_mode, vi_insert_mode
 from prompt_toolkit.filters.base import Condition, Filter
 from prompt_toolkit.formatted_text.base import AnyFormattedText
-from prompt_toolkit.key_binding.key_processor import KeyPressEvent
+from prompt_toolkit.key_binding.key_bindings import (
+    KeyBindingsBase,
+    merge_key_bindings,
+)
 from prompt_toolkit.keys import Keys
 from prompt_toolkit.layout.containers import (
     Float,
@@ -27,7 +30,7 @@ from wcwidth import wcswidth
 
 from ..key import Key
 from ..rime import RimeBase
-from .keymap import KEYS
+from .bindings import load_key_bindings
 
 
 @dataclass
@@ -41,43 +44,9 @@ class IME:
 class Rime(RimeBase, IME):
     r"""Rime for ptpython."""
 
-    keys_set: tuple[tuple[Keys | str, ...], ...] = KEYS
+    key_bindings: KeyBindingsBase | None = None
     content: BufferControl = field(default_factory=BufferControl)
     iminsert: bool = False
-
-    @property
-    def has_preedit(self) -> bool:
-        r"""Has preedit.
-
-        :rtype: bool
-        """
-        return self.window.height == 2
-
-    @property
-    def preedit_available(self) -> Condition:
-        r"""Filter. Only when ``preedit`` is not available, key binding works.
-
-        :rtype: Condition
-        """
-
-        @Condition
-        def _() -> bool:
-            r""".
-
-            :rtype: bool
-            """
-            return self.has_preedit
-
-        return _
-
-    @property
-    def insert_mode(self) -> Filter:
-        r"""Filter. Only when ``preedit`` is not available, key binding works.
-
-        :rtype: Filter
-        """
-
-        return (emacs_insert_mode | vi_insert_mode) & ~self.preedit_available
 
     def __post_init__(self) -> None:
         r"""Post init.
@@ -93,21 +62,17 @@ class Rime(RimeBase, IME):
                 [self.float],
             )
         )
-        for keys in self.keys_set:
 
-            @self.repl.add_key_binding(*keys, filter=self.keys_available(keys))
-            def _(
-                event: KeyPressEvent, keys: tuple[Keys | str, ...] = keys
-            ) -> None:
-                r""".
-
-                :param event:
-                :type event: KeyPressEvent
-                :param keys:
-                :type keys: tuple[Keys | str, ...]
-                :rtype: None
-                """
-                self.key_binding(event, *keys)
+        if self.key_bindings is None:
+            self.key_bindings = load_key_bindings(self)
+        self.repl.app.key_bindings = merge_key_bindings(
+            (
+                [self.repl.app.key_bindings]
+                if self.repl.app.key_bindings
+                else []
+            )
+            + [self.key_bindings]
+        )
 
     def exe(self, callback: Callable[[str], None], *keys: Key) -> None:
         r"""Override ``RimeBase``.
@@ -120,6 +85,7 @@ class Rime(RimeBase, IME):
         :rtype: None
         """
         text, lines, col = self.draw(*keys)
+        # insert text before calculating cursor position
         callback(text)
         self.content.buffer.text = "\n".join(lines)
         self.window.height = len(lines)
@@ -131,19 +97,18 @@ class Rime(RimeBase, IME):
         self.float.left, self.float.top = self.calculate()
         self.float.left += col
 
-    def key_binding(self, event: KeyPressEvent, *keys: Keys | str) -> None:
-        r"""Key binding.
+    @staticmethod
+    def calculate_buffer(buffer: Buffer) -> tuple[int, int]:
+        r"""Calculate buffer.
 
-        :param event:
-        :type event: KeyPressEvent
-        :param keys:
-        :type keys: Keys | str
-        :rtype: None
+        :param buffer:
+        :type buffer: Buffer
+        :rtype: tuple[int, int]
         """
-        self(
-            lambda text: event.cli.current_buffer.insert_text(text),
-            Key.new(keys),
-        )
+        lines = buffer.text[: buffer.cursor_position].splitlines()
+        top = len(lines)
+        left = wcswidth(lines[-1]) if top > 0 else 0
+        return left, top
 
     @staticmethod
     def stringifyAnyFormattedText(formatted_text: AnyFormattedText) -> str:
@@ -168,19 +133,6 @@ class Rime(RimeBase, IME):
             for _, text, *_ in formatted_text:
                 pwcs += text
         return pwcs
-
-    @staticmethod
-    def calculate_buffer(buffer: Buffer) -> tuple[int, int]:
-        r"""Calculate buffer.
-
-        :param buffer:
-        :type buffer: Buffer
-        :rtype: tuple[int, int]
-        """
-        lines = buffer.text[: buffer.cursor_position].splitlines()
-        top = len(lines)
-        left = wcswidth(lines[-1]) if top > 0 else 0
-        return left, top
 
     def calculate(self) -> tuple[int, int]:
         r"""Calculate.
@@ -260,6 +212,40 @@ class Rime(RimeBase, IME):
             return len(keys) == 1 == len(keys[0])
 
         return _
+
+    @property
+    def has_preedit(self) -> bool:
+        r"""Has preedit.
+
+        :rtype: bool
+        """
+        return self.window.height == 2
+
+    @property
+    def preedit_available(self) -> Condition:
+        r"""Filter. Only when ``preedit`` is not available, key binding works.
+
+        :rtype: Condition
+        """
+
+        @Condition
+        def _() -> bool:
+            r""".
+
+            :rtype: bool
+            """
+            return self.has_preedit
+
+        return _
+
+    @property
+    def insert_mode(self) -> Filter:
+        r"""Filter. Only when ``preedit`` is not available, key binding works.
+
+        :rtype: Filter
+        """
+
+        return (emacs_insert_mode | vi_insert_mode) & ~self.preedit_available
 
     def keys_available(self, keys) -> Filter:
         r"""Filter.

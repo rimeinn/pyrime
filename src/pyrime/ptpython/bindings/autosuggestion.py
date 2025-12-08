@@ -5,24 +5,27 @@ Refer `zsh-autosuggestions <https://github.com/zsh-users/zsh-autosuggestions>`_.
 """
 
 import re
+from typing import TYPE_CHECKING
 
-from prompt_toolkit.filters import (
-    Condition,
-    emacs_mode,
-)
-from prompt_toolkit.filters.app import vi_insert_mode
+from prompt_toolkit.filters import Condition, emacs_mode
+from prompt_toolkit.key_binding.key_bindings import KeyBindings
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 from prompt_toolkit.keys import Keys
-from ptpython.repl import PythonRepl
+
+if TYPE_CHECKING:
+    from ..rime import Rime
 
 
-def autosuggestion(repl: PythonRepl) -> None:
+def load_autosuggestion_bindings(rime: "Rime") -> KeyBindings:
     r"""Autosuggestion.
 
-    :param repl:
-    :type repl: PythonRepl
-    :rtype: None
+    :param rime:
+    :type rime: Rime
+    :rtype: KeyBindings
     """
+    key_bindings = KeyBindings()
+    insert_mode = rime.insert_mode
+    handle = key_bindings.add
 
     @Condition
     def suggestion_available() -> bool:
@@ -30,20 +33,15 @@ def autosuggestion(repl: PythonRepl) -> None:
 
         :rtype: bool
         """
-        app = repl.app
+        app = rime.repl.app
         return (
             app.current_buffer.suggestion is not None
             and len(app.current_buffer.suggestion.text) > 0
             and app.current_buffer.document.is_cursor_at_the_end
         )
 
-    @repl.add_key_binding(
-        "right",
-        filter=suggestion_available & vi_insert_mode,  # type: ignore
-    )
-    @repl.add_key_binding("right", filter=suggestion_available & emacs_mode)  # type: ignore
-    @repl.add_key_binding("c-f", filter=suggestion_available & vi_insert_mode)  # type: ignore
-    @repl.add_key_binding("c-f", filter=suggestion_available & emacs_mode)  # type: ignore
+    @handle("right", filter=suggestion_available & insert_mode)
+    @handle("c-f", filter=suggestion_available & insert_mode)
     def _(event: "KeyPressEvent") -> None:
         """.
 
@@ -59,11 +57,7 @@ def autosuggestion(repl: PythonRepl) -> None:
                 suggestion.text[0 : min(event.arg, len(suggestion.text))]
             )
 
-    @repl.add_key_binding(
-        "c-]",
-        Keys.Any,  # type: ignore
-        filter=suggestion_available & emacs_mode,  # type: ignore
-    )
+    @handle("c-]", Keys.Any, filter=suggestion_available & emacs_mode)
     def _(event: "KeyPressEvent") -> None:
         """.
 
@@ -80,3 +74,5 @@ def autosuggestion(repl: PythonRepl) -> None:
             b.insert_text(next(x for x in t if x))
             if len(t) != 1:
                 b.insert_text(event.data)
+
+    return key_bindings

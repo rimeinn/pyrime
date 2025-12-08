@@ -6,30 +6,32 @@ Use ``emacs_insert_mode`` to replace ``vi_insert_mode``
 Refer `vim-rsi <https://github.com/tpope/vim-rsi>`_.
 """
 
+from typing import TYPE_CHECKING
+
 from prompt_toolkit.clipboard import ClipboardData
 from prompt_toolkit.enums import EditingMode
-from prompt_toolkit.filters import (
-    in_paste_mode,
-)
+from prompt_toolkit.filters import in_paste_mode
 from prompt_toolkit.filters.app import emacs_insert_mode, vi_navigation_mode
+from prompt_toolkit.key_binding.key_bindings import KeyBindings
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 from prompt_toolkit.key_binding.vi_state import InputMode
 from prompt_toolkit.selection import SelectionType
 
-from ...key import Key, ModifierKey
-from ..rime import Rime
+if TYPE_CHECKING:
+    from ..rime import Rime
 
 
-def viemacs(rime: Rime) -> None:
+def load_viemacs_bindings(rime: "Rime") -> KeyBindings:
     r"""Viemacs.
 
     :param rime:
     :type rime: Rime
-    :rtype: None
+    :rtype: KeyBindings
     """
-    repl = rime.repl
+    key_bindings = KeyBindings()
+    handle = key_bindings.add
 
-    @repl.add_key_binding("escape", filter=emacs_insert_mode)
+    @handle("escape", filter=emacs_insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -37,11 +39,11 @@ def viemacs(rime: Rime) -> None:
         :type event: KeyPressEvent
         :rtype: None
         """
+        rime.is_enabled = False
         event.app.editing_mode = EditingMode.VI
         event.app.vi_state.input_mode = InputMode.NAVIGATION
-        rime.is_enabled = False
 
-    @repl.add_key_binding("i", filter=vi_navigation_mode)
+    @handle("i", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -53,7 +55,7 @@ def viemacs(rime: Rime) -> None:
         event.app.vi_state.input_mode = InputMode.INSERT
         rime.is_enabled = rime.iminsert
 
-    @repl.add_key_binding("a", filter=vi_navigation_mode)
+    @handle("a", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -68,7 +70,7 @@ def viemacs(rime: Rime) -> None:
         )
         rime.is_enabled = rime.iminsert
 
-    @repl.add_key_binding("I", filter=vi_navigation_mode)
+    @handle("I", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -85,7 +87,7 @@ def viemacs(rime: Rime) -> None:
         )
         rime.is_enabled = rime.iminsert
 
-    @repl.add_key_binding("A", filter=vi_navigation_mode)
+    @handle("A", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -100,7 +102,7 @@ def viemacs(rime: Rime) -> None:
         )
         rime.is_enabled = rime.iminsert
 
-    @repl.add_key_binding("o", filter=vi_navigation_mode)
+    @handle("o", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -113,7 +115,7 @@ def viemacs(rime: Rime) -> None:
         event.current_buffer.insert_line_below(copy_margin=not in_paste_mode())
         rime.is_enabled = rime.iminsert
 
-    @repl.add_key_binding("O", filter=vi_navigation_mode)
+    @handle("O", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -126,7 +128,7 @@ def viemacs(rime: Rime) -> None:
         event.current_buffer.insert_line_above(copy_margin=not in_paste_mode())
         rime.is_enabled = rime.iminsert
 
-    @repl.add_key_binding("s", filter=vi_navigation_mode)
+    @handle("s", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -140,7 +142,7 @@ def viemacs(rime: Rime) -> None:
         event.app.clipboard.set_text(text)
         rime.is_enabled = rime.iminsert
 
-    @repl.add_key_binding("C", filter=vi_navigation_mode)
+    @handle("C", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -158,8 +160,8 @@ def viemacs(rime: Rime) -> None:
         event.app.clipboard.set_text(deleted)
         rime.is_enabled = rime.iminsert
 
-    @repl.add_key_binding("c", "c", filter=vi_navigation_mode)
-    @repl.add_key_binding("S", filter=vi_navigation_mode)
+    @handle("c", "c", filter=vi_navigation_mode)
+    @handle("S", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -181,37 +183,4 @@ def viemacs(rime: Rime) -> None:
         buffer.delete(count=buffer.document.get_end_of_line_position())
         rime.is_enabled = rime.iminsert
 
-    @repl.add_key_binding(
-        *Key.new("enter", ModifierKey.Shift).keys,
-        filter=~rime.preedit_available,
-    )
-    @repl.add_key_binding(
-        *Key.new("enter", ModifierKey.Control).keys,
-        filter=~rime.preedit_available,
-    )
-    @repl.add_key_binding(
-        *Key.new("enter", ModifierKey.Control | ModifierKey.Shift).keys,
-        filter=~rime.preedit_available,
-    )
-    @repl.add_key_binding(
-        *Key.new("enter", ModifierKey.Shift | ModifierKey.Alt).keys,
-        filter=~rime.preedit_available,
-    )
-    @repl.add_key_binding(
-        *Key.new("enter", ModifierKey.Control | ModifierKey.Alt).keys,
-        filter=~rime.preedit_available,
-    )
-    @repl.add_key_binding(
-        *Key.new(
-            "enter", ModifierKey.Control | ModifierKey.Shift | ModifierKey.Alt
-        ).keys,
-        filter=~rime.preedit_available,
-    )
-    def _(event: KeyPressEvent) -> None:
-        """`<https://github.com/prompt-toolkit/python-prompt-toolkit/issues/2006>_`
-
-        :param event:
-        :type event: KeyPressEvent
-        :rtype: None
-        """
-        event.current_buffer.validate_and_handle()
+    return key_bindings

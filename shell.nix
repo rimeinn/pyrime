@@ -8,6 +8,7 @@ mkShell {
   buildInputs = [
     librime
 
+    ninja
     pkg-config
     uv
 
