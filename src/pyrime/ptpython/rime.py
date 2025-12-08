@@ -8,9 +8,8 @@ call librime on the basis of ``IME``.
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
-from prompt_toolkit.filters import Condition
 from prompt_toolkit.filters.app import emacs_insert_mode, vi_insert_mode
-from prompt_toolkit.filters.base import Filter
+from prompt_toolkit.filters.base import Condition, Filter
 from prompt_toolkit.formatted_text.base import AnyFormattedText
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 from prompt_toolkit.keys import Keys
@@ -22,12 +21,19 @@ from prompt_toolkit.layout.containers import (
 from prompt_toolkit.layout.controls import BufferControl
 from prompt_toolkit.layout.layout import Layout
 from prompt_toolkit.widgets import Frame
+from ptpython.repl import PythonRepl
 from wcwidth import wcswidth
 
 from ..key import Key
 from ..rime import RimeBase
-from .ime import IME
 from .keymap import KEYS
+
+
+@dataclass
+class IME:
+    r"""An empty class to make repl as first argument of ``__init__()``"""
+
+    repl: PythonRepl
 
 
 @dataclass
@@ -36,10 +42,37 @@ class Rime(RimeBase, IME):
 
     keys_set: tuple[tuple[Keys | str, ...], ...] = KEYS
     content: BufferControl = field(default_factory=BufferControl)
+    iminsert: bool = False
 
     @property
     def has_preedit(self) -> bool:
         return self.window.height == 2
+
+    @property
+    def preedit_available(self) -> Condition:
+        r"""Filter. Only when ``preedit`` is not available, key binding works.
+
+        :rtype: Condition
+        """
+
+        @Condition
+        def _() -> bool:
+            r""".
+
+            :rtype: bool
+            """
+            return self.has_preedit
+
+        return _
+
+    @property
+    def insert_mode(self) -> Filter:
+        r"""Filter. Only when ``preedit`` is not available, key binding works.
+
+        :rtype: Filter
+        """
+
+        return (emacs_insert_mode | vi_insert_mode) & ~self.preedit_available
 
     def __post_init__(self) -> None:
         r"""Post init.
@@ -156,7 +189,7 @@ class Rime(RimeBase, IME):
     def is_enabled(self, enabled: bool) -> None:
         if (
             super().is_enabled == enabled
-            or not (emacs_insert_mode & vi_insert_mode)()
+            or not (emacs_insert_mode | vi_insert_mode)()
         ):
             return
         self.iminsert = self.is_enabled

@@ -4,13 +4,30 @@ r"""Rime
 Refer <https://github.com/rimeinn/rime.nvim/blob/main/lua/rime/rime.lua>
 """
 
+import logging
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
+from . import SessionBase
 from .ime import IMEBase
 from .key import Key, ModifierKey
-from .session import Session
 from .ui import UI
+
+logger = logging.getLogger(__name__)
+
+
+def get_session() -> SessionBase:
+    r"""Get a session.
+
+    In some python environments such as ``gdb``, 3rd binary python module
+    cannot be imported. Use ``IME`` to replace ``RIME``.
+    """
+    try:
+        from .session import Session as cls
+    except ImportError as e:
+        logger.warning(e.msg)
+        cls = SessionBase
+    return cls()
 
 
 @dataclass
@@ -20,7 +37,7 @@ class RimeBase(IMEBase):
     Provides ``draw()``.
     """
 
-    session: Session = field(default_factory=Session)
+    session: SessionBase = field(default_factory=get_session)
     ui: UI = field(default_factory=UI)
     enabled: bool = False
 

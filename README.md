@@ -117,16 +117,13 @@ from prompt_toolkit.filters.app import (
     vi_navigation_mode,
 )
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
-from pyrime.ptpython import RIME
+from pyrime.ptpython.rime import Rime
 
 
 def configure(repl: PythonRepl) -> None:
-    rime = RIME(repl)
+    rime = Rime(repl)
 
-    @repl.add_key_binding(
-        "c-^",
-        filter=(emacs_insert_mode | vi_insert_mode) & rime.filter(),
-    )
+    @repl.add_key_binding("c-^", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         rime.is_enabled = not rime.is_enabled
 ```

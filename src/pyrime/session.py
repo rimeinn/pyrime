@@ -7,12 +7,12 @@ Refer <https://github.com/rimeinn/rime.nvim/blob/main/lua/rime/session.lua>
 
 from dataclasses import dataclass, field
 
-from . import Commit, Context, SchemaListItem
+from . import Commit, Context, SchemaListItem, SessionBase
 from .api import API, Traits
 
 
 @dataclass
-class Session:
+class Session(SessionBase):
     r"""A session for Rime"""
 
     traits: Traits = field(default_factory=Traits)
