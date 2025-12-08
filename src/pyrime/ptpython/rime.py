@@ -8,6 +8,7 @@ call librime on the basis of ``IME``.
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
+from prompt_toolkit.buffer import Buffer
 from prompt_toolkit.filters.app import emacs_insert_mode, vi_insert_mode
 from prompt_toolkit.filters.base import Condition, Filter
 from prompt_toolkit.formatted_text.base import AnyFormattedText
@@ -46,6 +47,10 @@ class Rime(RimeBase, IME):
 
     @property
     def has_preedit(self) -> bool:
+        r"""Has preedit.
+
+        :rtype: bool
+        """
         return self.window.height == 2
 
     @property
@@ -164,29 +169,46 @@ class Rime(RimeBase, IME):
                 pwcs += text
         return pwcs
 
+    @staticmethod
+    def calculate_buffer(buffer: Buffer) -> tuple[int, int]:
+        r"""Calculate buffer.
+
+        :param buffer:
+        :type buffer: Buffer
+        :rtype: tuple[int, int]
+        """
+        lines = buffer.text[: buffer.cursor_position].splitlines()
+        top = len(lines)
+        left = wcswidth(lines[-1]) if top > 0 else 0
+        return left, top
+
     def calculate(self) -> tuple[int, int]:
         r"""Calculate.
 
         :rtype: tuple[int, int]
         """
+        buffer = self.repl.app.layout.current_buffer
+        left, top = self.calculate_buffer(buffer) if buffer else (0, 0)
         formatted_text = self.repl.get_input_prompt()
-        left = wcswidth(self.stringifyAnyFormattedText(formatted_text))
-        top = 0
-        if self.repl.app.layout.current_buffer:
-            lines = self.repl.app.layout.current_buffer.text[
-                : self.repl.app.layout.current_buffer.cursor_position
-            ].splitlines()
-            top += len(lines)
-            if top > 0:
-                left += wcswidth(lines[-1])
+        left += wcswidth(self.stringifyAnyFormattedText(formatted_text))
         return left, top
 
     @property
     def is_enabled(self) -> bool:
+        r"""Is enabled.
+
+        :rtype: bool
+        """
         return super().is_enabled
 
     @is_enabled.setter
     def is_enabled(self, enabled: bool) -> None:
+        r"""Is enabled.
+
+        :param enabled:
+        :type enabled: bool
+        :rtype: None
+        """
         if (
             super().is_enabled == enabled
             or not (emacs_insert_mode | vi_insert_mode)()
