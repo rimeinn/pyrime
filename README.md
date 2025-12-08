@@ -150,7 +150,8 @@ from pyrime.api import Traits
 def configure(repl: PythonRepl) -> None:
 
     rime = Rime(
-        repl, Session(Traits(user_config_dir=os.path.expanduser("~/.config/rime")))
+        repl,
+        Session(Traits(user_config_dir=os.path.expanduser("~/.config/rime"))),
     )
 ```
 
