@@ -165,7 +165,7 @@ If you want to exit rime in `vi_navigation_mode`, try:
         """
         event.app.editing_mode = EditingMode.EMACS
         event.app.vi_state.input_mode = InputMode.INSERT
-        rime.is_enabled = True
+        rime.is_enabled = rime.iminsert
 ```
 
 It will remember rime status and enable it when reenter `vi_insert_mode` or

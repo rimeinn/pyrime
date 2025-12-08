@@ -45,7 +45,7 @@ def viemacs(rime: IME) -> None:
         """
         event.app.editing_mode = EditingMode.EMACS
         event.app.vi_state.input_mode = InputMode.INSERT
-        rime.is_enabled = True
+        rime.is_enabled = rime.iminsert
 
     @repl.add_key_binding("a", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
@@ -60,7 +60,7 @@ def viemacs(rime: IME) -> None:
         event.current_buffer.cursor_position += (
             event.current_buffer.document.get_cursor_right_position()
         )
-        rime.is_enabled = True
+        rime.is_enabled = rime.iminsert
 
     @repl.add_key_binding("I", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
@@ -77,7 +77,7 @@ def viemacs(rime: IME) -> None:
                 after_whitespace=True
             )
         )
-        rime.is_enabled = True
+        rime.is_enabled = rime.iminsert
 
     @repl.add_key_binding("A", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
@@ -92,7 +92,7 @@ def viemacs(rime: IME) -> None:
         event.current_buffer.cursor_position += (
             event.current_buffer.document.get_end_of_line_position()
         )
-        rime.is_enabled = True
+        rime.is_enabled = rime.iminsert
 
     @repl.add_key_binding("o", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
@@ -105,7 +105,7 @@ def viemacs(rime: IME) -> None:
         event.app.editing_mode = EditingMode.EMACS
         event.app.vi_state.input_mode = InputMode.INSERT
         event.current_buffer.insert_line_below(copy_margin=not in_paste_mode())
-        rime.is_enabled = True
+        rime.is_enabled = rime.iminsert
 
     @repl.add_key_binding("O", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
@@ -118,7 +118,7 @@ def viemacs(rime: IME) -> None:
         event.app.editing_mode = EditingMode.EMACS
         event.app.vi_state.input_mode = InputMode.INSERT
         event.current_buffer.insert_line_above(copy_margin=not in_paste_mode())
-        rime.is_enabled = True
+        rime.is_enabled = rime.iminsert
 
     @repl.add_key_binding("s", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
@@ -132,7 +132,7 @@ def viemacs(rime: IME) -> None:
         event.app.vi_state.input_mode = InputMode.INSERT
         text = event.current_buffer.delete(count=event.arg)
         event.app.clipboard.set_text(text)
-        rime.is_enabled = True
+        rime.is_enabled = rime.iminsert
 
     @repl.add_key_binding("C", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
@@ -150,7 +150,7 @@ def viemacs(rime: IME) -> None:
             count=buffer.document.get_end_of_line_position()
         )
         event.app.clipboard.set_text(deleted)
-        rime.is_enabled = True
+        rime.is_enabled = rime.iminsert
 
     @repl.add_key_binding("c", "c", filter=vi_navigation_mode)
     @repl.add_key_binding("S", filter=vi_navigation_mode)
@@ -173,7 +173,7 @@ def viemacs(rime: IME) -> None:
             after_whitespace=True
         )
         buffer.delete(count=buffer.document.get_end_of_line_position())
-        rime.is_enabled = True
+        rime.is_enabled = rime.iminsert
 
     @repl.add_key_binding(
         *Key.new("enter", ModifierKey.Shift).keys,

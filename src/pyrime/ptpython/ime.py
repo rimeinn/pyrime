@@ -21,6 +21,7 @@ class IME(IMEBase):
     """
 
     repl: PythonRepl
+    iminsert: bool = False
 
     @property
     def has_preedit(self) -> bool:

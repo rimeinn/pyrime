@@ -7,5 +7,5 @@ imported. Use ``IME`` to replace ``RIME``.
 
 try:
     from .rime import Rime as RIME
-except ImportError:
+except ModuleNotFoundError:
     from .ime import IME as RIME  # noqa: F401

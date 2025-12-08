@@ -158,9 +158,7 @@ class Rime(RimeBase, IME):
 
         :rtype: tuple[int, int]
         """
-        formatted_text = self.repl.all_prompt_styles[
-            self.repl.prompt_style
-        ].in_prompt()
+        formatted_text = self.repl.get_input_prompt()
         left = wcswidth(self.stringifyAnyFormattedText(formatted_text))
         top = 0
         if self.repl.app.layout.current_buffer:
@@ -178,11 +176,13 @@ class Rime(RimeBase, IME):
 
     @is_enabled.setter
     def is_enabled(self, enabled: bool) -> None:
-        if super().is_enabled != enabled:
-            self.layout, self.repl.app.layout = (
-                self.repl.app.layout,
-                self.layout,
-            )
+        if super().is_enabled == enabled:
+            return
+        self.iminsert = self.is_enabled
+        self.layout, self.repl.app.layout = (
+            self.repl.app.layout,
+            self.layout,
+        )
         fset = RimeBase.is_enabled.fset
         if fset:
             fset(self, enabled)
