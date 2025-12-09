@@ -7,13 +7,14 @@ Refer
 
 from typing import TYPE_CHECKING
 
+from prompt_toolkit.filters.base import Filter
 from prompt_toolkit.key_binding.key_bindings import (
     KeyBindingsBase,
     merge_key_bindings,
 )
 from prompt_toolkit.keys import Keys
 
-from .autoinsert import load_autoinsert_bindings
+from .autoinsert import INSERTIONS, load_autoinsert_bindings
 from .autopair import load_autopair_bindings
 from .autosuggestion import load_autosuggestion_bindings
 from .extra import load_extra_bindings
@@ -26,7 +27,11 @@ if TYPE_CHECKING:
 
 
 def load_key_bindings(
-    rime: "IME", keys_set: tuple[tuple[Keys | str, ...], ...] = KEYS
+    rime: "IME",
+    keys_set: tuple[tuple[Keys | str, ...], ...] = KEYS,
+    insertions: dict[
+        tuple[str, str], dict[tuple[Keys | str, ...], Filter]
+    ] = INSERTIONS,
 ) -> KeyBindingsBase:
     r"""Load key bindings.
 
@@ -34,6 +39,8 @@ def load_key_bindings(
     :type rime: IME
     :param keys_set:
     :type keys_set: tuple[tuple[Keys | str, ...], ...]
+    :param insertions:
+    :type insertions: tuple[str, str], dict[tuple[Keys | str, ...], Filter]
     :rtype: KeyBindingsBase
     """
     return merge_key_bindings([
@@ -43,5 +50,5 @@ def load_key_bindings(
         load_smartinput_bindings(rime),
         load_viemacs_bindings(rime),
         load_extra_bindings(rime),
-        load_autoinsert_bindings(rime),
+        load_autoinsert_bindings(rime, insertions),
     ])
