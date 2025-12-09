@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from ptpython.python_input import PythonInput
 
 from .ime import IME
+from .layout import RimeLayout
 
 
 @dataclass
@@ -26,6 +27,5 @@ class Rime(IME, _PythonInput):
 
         :rtype: None
         """
-        self.app = self.repl.app
-        self.get_input_prompt = self.repl.get_input_prompt
+        self.layout = RimeLayout(self.repl.app, self.repl.get_input_prompt)
         super().__post_init__()
