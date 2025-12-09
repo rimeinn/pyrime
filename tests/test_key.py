@@ -38,5 +38,5 @@ class Test:
         key = Key.new(
             "enter", ModifierKey.Control | ModifierKey.Shift | ModifierKey.Alt
         )
-        assert key.keys == ("escape", *"[27;8;13~")
+        assert key._keys == ("escape", *"[27;8;13~")
         assert key == Key.new(("escape", *"[27;8;13~"))

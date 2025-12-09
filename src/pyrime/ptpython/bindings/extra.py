@@ -31,29 +31,29 @@ def load_extra_bindings(rime: "IME") -> KeyBindings:
     handle = key_bindings.add
 
     @handle(
-        *Key.new("enter", ModifierKey.Shift).keys,
+        *Key.new("enter", ModifierKey.Shift)._keys,
         filter=~rime.preedit_available,
     )
     @handle(
-        *Key.new("enter", ModifierKey.Control).keys,
+        *Key.new("enter", ModifierKey.Control)._keys,
         filter=~rime.preedit_available,
     )
     @handle(
-        *Key.new("enter", ModifierKey.Control | ModifierKey.Shift).keys,
+        *Key.new("enter", ModifierKey.Control | ModifierKey.Shift)._keys,
         filter=~rime.preedit_available,
     )
     @handle(
-        *Key.new("enter", ModifierKey.Shift | ModifierKey.Alt).keys,
+        *Key.new("enter", ModifierKey.Shift | ModifierKey.Alt)._keys,
         filter=~rime.preedit_available,
     )
     @handle(
-        *Key.new("enter", ModifierKey.Control | ModifierKey.Alt).keys,
+        *Key.new("enter", ModifierKey.Control | ModifierKey.Alt)._keys,
         filter=~rime.preedit_available,
     )
     @handle(
         *Key.new(
             "enter", ModifierKey.Control | ModifierKey.Shift | ModifierKey.Alt
-        ).keys,
+        )._keys,
         filter=~rime.preedit_available,
     )
     def _(event: KeyPressEvent) -> None:

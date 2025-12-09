@@ -254,7 +254,7 @@ class Key:
         return self.modifier.value
 
     @property
-    def keys(self) -> "tuple[Keys | str, ...]":
+    def _keys(self) -> "tuple[Keys | str, ...]":
         r"""Get prompt-toolkit key name.
 
         :param self:

@@ -21,15 +21,15 @@ KEYS = {
     ("s-escape",),
     ("escape", "backspace"),
     ("escape", "enter"),
-    Key.new("enter", ModifierKey.Shift).keys,
-    Key.new("enter", ModifierKey.Control).keys,
-    Key.new("enter", ModifierKey.Shift | ModifierKey.Control).keys,
-    Key.new("enter", ModifierKey.Shift | ModifierKey.Alt).keys,
-    Key.new("enter", ModifierKey.Control | ModifierKey.Alt).keys,
+    Key.new("enter", ModifierKey.Shift)._keys,
+    Key.new("enter", ModifierKey.Control)._keys,
+    Key.new("enter", ModifierKey.Shift | ModifierKey.Control)._keys,
+    Key.new("enter", ModifierKey.Shift | ModifierKey.Alt)._keys,
+    Key.new("enter", ModifierKey.Control | ModifierKey.Alt)._keys,
     Key.new(
         "enter",
         ModifierKey.Shift | ModifierKey.Control | ModifierKey.Alt,
-    ).keys,
+    )._keys,
 }
 for order in range(ord(" "), ord("~") + 1):
     KEYS |= {(chr(order),)}

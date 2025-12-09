@@ -24,11 +24,17 @@ from .formatted_text import formatted_text
 
 @dataclass
 class RimeLayout(Layout):
+    r"""Rimelayout."""
+
     app: Application = field(default_factory=get_app)
     get_input_prompt: Callable[[], AnyFormattedText] = lambda: ""
     content: BufferControl = field(default_factory=BufferControl)
 
     def __post_init__(self) -> None:
+        r"""Post init.
+
+        :rtype: None
+        """
         self.window = Window(self.content)
         self.float = Float(Frame(self.window))
         super().__init__(
@@ -39,14 +45,38 @@ class RimeLayout(Layout):
         )
 
     def move(self, left: int, top: int) -> None:
+        r"""Move.
+
+        :param left:
+        :type left: int
+        :param top:
+        :type top: int
+        :rtype: None
+        """
         self.float.left = left
         self.float.top = top
 
     def resize(self, width: int, height: int) -> None:
+        r"""Resize.
+
+        :param width:
+        :type width: int
+        :param height:
+        :type height: int
+        :rtype: None
+        """
         self.window.width = width
         self.window.height = height
 
     def update(self, lines: tuple[str, ...] = (), col: int = 0) -> None:
+        r"""Update.
+
+        :param lines:
+        :type lines: tuple[str, ...]
+        :param col:
+        :type col: int
+        :rtype: None
+        """
         self.content.buffer.text = "\n".join(lines)
         self.resize(
             (max(wcswidth(line) for line in lines) if len(lines) > 0 else 0),
