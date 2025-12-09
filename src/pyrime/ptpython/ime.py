@@ -8,10 +8,7 @@ from dataclasses import dataclass, field
 
 from prompt_toolkit.filters.app import emacs_insert_mode, vi_insert_mode
 from prompt_toolkit.filters.base import Condition, Filter
-from prompt_toolkit.key_binding.key_bindings import (
-    KeyBindingsBase,
-    merge_key_bindings,
-)
+from prompt_toolkit.key_binding.key_bindings import merge_key_bindings
 from prompt_toolkit.keys import Keys
 
 from ..key import Key
@@ -21,11 +18,14 @@ from .layout import RimeLayout
 
 
 @dataclass
-class IME(RimeBase):
+class _IME:
+    layout: RimeLayout = field(default_factory=RimeLayout)
+
+
+@dataclass
+class IME(RimeBase, _IME):
     r"""Rime for prompt toolkit."""
 
-    layout: RimeLayout = field(default_factory=RimeLayout)
-    key_bindings: KeyBindingsBase | None = None
     iminsert: bool = False
 
     def __post_init__(self) -> None:
@@ -35,11 +35,9 @@ class IME(RimeBase):
         """
         self.back_layout = self.layout
         self.app = self.layout.app
-        if self.key_bindings is None:
-            self.key_bindings = load_key_bindings(self)
         self.app.key_bindings = merge_key_bindings(
             ([self.app.key_bindings] if self.app.key_bindings else [])
-            + [self.key_bindings]
+            + [load_key_bindings(self)]
         )
 
     def exe(self, callback: Callable[[str], None], *keys: Key) -> None:

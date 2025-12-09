@@ -51,6 +51,7 @@ This project is consist of two parts:
 
 - A python binding of librime
 - A librime frontend on ptpython
+- A librime frontend on neovim (TODO)
 
 ## Dependence
 
@@ -163,12 +164,13 @@ If you have defined some key bindings which will disturb rime, try:
         pass
 ```
 
-If you want to exit rime in `vi_navigation_mode`, try:
+If you want to exit rime in `vi_navigation_mode`, refer the following code of
+`pyrime.ptpython.bindings.viemacs`'s `load_viemacs_bindings()`:
 
 ```python
-    @repl.add_key_binding("escape", filter=emacs_insert_mode)
+    @repl.add_key_binding("escape", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
-        """.
+        """Switch insert mode to normal mode.
 
         :param event:
         :type event: KeyPressEvent
@@ -184,7 +186,7 @@ If you want to exit rime in `vi_navigation_mode`, try:
     # and a, I, A, ...
     @repl.add_key_binding("i", filter=vi_navigation_mode)
     def _(event: KeyPressEvent) -> None:
-        """.
+        """Switch normal mode to insert mode.
 
         :param event:
         :type event: KeyPressEvent
@@ -201,6 +203,21 @@ It will remember rime status and enable it when reenter `vi_insert_mode` or
 
 Some predefined key bindings are
 [provided](https://github.com/rimeinn/pyrime/tree/main/src/pyrime/ptpython/bindings).
+You can enable what you want:
+
+```python
+from prompt_toolkit.key_binding.key_bindings import merge_key_bindings
+from pyrime.ptpython.bindings.autopair import load_autopair_bindings
+from pyrime.ptpython.bindings.rime import load_rime_bindings
+
+# by default, last registry is:
+# from pyrime.ptpython.bindings import load_key_bindings
+# rime.app.key_bindings.registries[-1] = load_key_bindings(rime)
+rime.app.key_bindings.registries[-1] = merge_key_bindings([
+    load_rime_bindings(rime),
+    load_autopair_bindings(rime),
+])
+```
 
 ## Related Projects
 

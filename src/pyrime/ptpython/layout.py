@@ -3,6 +3,7 @@ r"""Layout
 """
 
 from collections.abc import Callable
+from dataclasses import dataclass, field
 
 from prompt_toolkit.application import Application
 from prompt_toolkit.application.current import get_app
@@ -21,16 +22,13 @@ from wcwidth import wcswidth
 from .formatted_text import formatted_text
 
 
+@dataclass
 class RimeLayout(Layout):
-    def __init__(
-        self,
-        app: Application | None = None,
-        get_input_prompt: Callable[[], AnyFormattedText] = lambda: "",
-        content: BufferControl | None = None,
-    ) -> None:
-        self.app = app if app else get_app()
-        self.get_input_prompt = get_input_prompt
-        self.content = content if content else BufferControl()
+    app: Application = field(default_factory=get_app)
+    get_input_prompt: Callable[[], AnyFormattedText] = lambda: ""
+    content: BufferControl = field(default_factory=BufferControl)
+
+    def __post_init__(self) -> None:
         self.window = Window(self.content)
         self.float = Float(Frame(self.window))
         super().__init__(

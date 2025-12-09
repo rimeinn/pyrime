@@ -52,8 +52,7 @@ class BasicKeyEnum(Enum):
     r"""BasickeyEnum."""
 
     def __str__(self) -> str:
-        i = int(self.value)
-        return chr(i)
+        return chr(int(self.value))
 
     @property
     def rime_name(self) -> str:
@@ -346,6 +345,9 @@ class Key:
         :type keys: Keys | str
         :rtype: Self
         """
+        from prompt_toolkit.input.ansi_escape_sequences import (
+            REVERSE_ANSI_SEQUENCES,
+        )
         from prompt_toolkit.keys import KEY_ALIASES
 
         names: list[str] = []
@@ -355,7 +357,7 @@ class Key:
                 if len(keys) == 2:
                     modifier |= ModifierKey.Alt
                 else:
-                    names += ["\x1b"]
+                    names += [REVERSE_ANSI_SEQUENCES.get(key, "")]  # type: ignore
             else:
                 names += [key]
         if len(names) == 0:
