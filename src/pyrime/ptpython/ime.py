@@ -30,6 +30,7 @@ from wcwidth import wcswidth
 from ..key import Key
 from ..rime import RimeBase
 from .bindings import load_key_bindings
+from .formatted_text import formatted_text
 
 
 @dataclass
@@ -100,30 +101,6 @@ class IME(RimeBase):
         left = wcswidth(lines[-1]) if top > 0 else 0
         return left, top
 
-    @staticmethod
-    def stringifyAnyFormattedText(formatted_text: AnyFormattedText) -> str:
-        r"""stringify ``AnyFormattedText``.
-
-        :param formatted_text:
-        :type formatted_text: AnyFormattedText
-        :rtype: str
-        """
-        _formatted_text = getattr(
-            formatted_text, "__pt_formatted_text__", None
-        )
-        if _formatted_text:
-            formatted_text = _formatted_text
-        if isinstance(formatted_text, Callable):
-            formatted_text = formatted_text()
-
-        if isinstance(formatted_text, str):
-            return formatted_text
-        pwcs = ""
-        if isinstance(formatted_text, list):
-            for _, text, *_ in formatted_text:
-                pwcs += text
-        return pwcs
-
     def calculate(self) -> tuple[int, int]:
         r"""Calculate.
 
@@ -131,8 +108,7 @@ class IME(RimeBase):
         """
         buffer = self.app.layout.current_buffer
         left, top = self.calculate_buffer(buffer) if buffer else (0, 0)
-        formatted_text = self.get_input_prompt()
-        left += wcswidth(self.stringifyAnyFormattedText(formatted_text))
+        left += wcswidth(formatted_text(self.get_input_prompt()))
         return left, top
 
     @property

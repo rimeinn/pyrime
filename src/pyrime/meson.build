@@ -46,6 +46,7 @@ py.install_sources(
 py.install_sources(
   [
     'ptpython/gdb.py',
+    'ptpython/formatted_text.py',
     'ptpython/ime.py',
     'ptpython/rime.py',
   ],
