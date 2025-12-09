@@ -20,7 +20,7 @@ Refer <https://github.com/rimeinn/ime.nvim/blob/0.0.5/packages/ime/lua/ime/key.l
 import json
 import os
 from dataclasses import dataclass
-from enum import Enum, Flag, unique
+from enum import IntEnum, IntFlag, unique
 from typing import TYPE_CHECKING, Self, cast
 
 if TYPE_CHECKING:
@@ -48,19 +48,19 @@ template_map = {
 }
 
 
-class BasicKeyEnum(Enum):
+class BasicKeyEnum(IntEnum):
     r"""BasickeyEnum."""
 
     def __str__(self) -> str:
-        return chr(int(self.value))
+        return chr(int(self))
 
     @property
-    def rime_name(self) -> str:
+    def name(self) -> str:
         r"""Rime name.
 
         :rtype: str
         """
-        return self.value_to_rime(self.value)
+        return self.value_to_rime(self)
 
     @property
     def pt_name(self) -> str:
@@ -68,7 +68,7 @@ class BasicKeyEnum(Enum):
 
         :rtype: str
         """
-        return self.rime_to_pt(self.rime_name)
+        return self.rime_to_pt(self.name)
 
     @property
     def template(self) -> str | None:
@@ -76,7 +76,7 @@ class BasicKeyEnum(Enum):
 
         :rtype: str | None
         """
-        return template_map.get(self.rime_name)
+        return template_map.get(self.name)
 
     @classmethod
     def from_rime_name(cls, name: str) -> Self:
@@ -176,7 +176,7 @@ BasicKey = BasicKeyEnum("BasicKey", key_map)
 
 
 @unique
-class ModifierKey(Flag):
+class ModifierKey(IntFlag):
     r"""Not all rime modifier (Lock, ...) are supported in terminfo."""
 
     NULL = 0
@@ -234,24 +234,6 @@ class Key:
         if self.modifier == ModifierKey.NULL:
             return str(self.basic)
         return ""
-
-    @property
-    def code(self) -> int:
-        r"""rime key code.
-
-        :param self:
-        :rtype: int
-        """
-        return self.basic.value
-
-    @property
-    def mask(self) -> int:
-        r"""rime key code.
-
-        :param self:
-        :rtype: int
-        """
-        return self.modifier.value
 
     @property
     def _keys(self) -> "tuple[Keys | str, ...]":
