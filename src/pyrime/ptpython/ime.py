@@ -156,7 +156,6 @@ class IME(RimeBase):
             or not (emacs_insert_mode | vi_insert_mode)()
         ):
             return
-        self.iminsert = self.is_enabled
         self.layout, self.app.layout = (
             self.app.layout,
             self.layout,

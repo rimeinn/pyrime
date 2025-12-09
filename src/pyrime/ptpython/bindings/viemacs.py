@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING
 from prompt_toolkit.clipboard import ClipboardData
 from prompt_toolkit.enums import EditingMode
 from prompt_toolkit.filters import in_paste_mode
-from prompt_toolkit.filters.app import emacs_insert_mode, vi_navigation_mode
+from prompt_toolkit.filters.app import vi_navigation_mode
 from prompt_toolkit.key_binding.key_bindings import KeyBindings
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 from prompt_toolkit.key_binding.vi_state import InputMode
@@ -29,9 +29,10 @@ def load_viemacs_bindings(rime: "IME") -> KeyBindings:
     :rtype: KeyBindings
     """
     key_bindings = KeyBindings()
+    insert_mode = rime.insert_mode
     handle = key_bindings.add
 
-    @handle("escape", filter=emacs_insert_mode)
+    @handle("escape", filter=insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -39,6 +40,7 @@ def load_viemacs_bindings(rime: "IME") -> KeyBindings:
         :type event: KeyPressEvent
         :rtype: None
         """
+        rime.iminsert = rime.is_enabled
         rime.is_enabled = False
         event.app.editing_mode = EditingMode.VI
         event.app.vi_state.input_mode = InputMode.NAVIGATION

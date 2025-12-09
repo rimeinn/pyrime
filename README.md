@@ -174,7 +174,9 @@ If you want to exit rime in `vi_navigation_mode`, try:
         :type event: KeyPressEvent
         :rtype: None
         """
-        # rime.is_enabled will be stored to rime.iminsert
+        # store rime status
+        rime.iminsert = rime.is_enabled
+        # disable rime
         rime.is_enabled = False
         event.app.editing_mode = EditingMode.VI
         event.app.vi_state.input_mode = InputMode.NAVIGATION
@@ -190,7 +192,7 @@ If you want to exit rime in `vi_navigation_mode`, try:
         """
         event.app.editing_mode = EditingMode.EMACS
         event.app.vi_state.input_mode = InputMode.INSERT
-        # restore rime
+        # recovery rime status
         rime.is_enabled = rime.iminsert
 ```
 
