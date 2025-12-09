@@ -51,6 +51,10 @@ template_map = {
 class BasicKeyEnum(Enum):
     r"""BasickeyEnum."""
 
+    def __str__(self) -> str:
+        i = int(self.value)
+        return chr(i)
+
     @property
     def rime_name(self) -> str:
         r"""Rime name.
@@ -226,6 +230,11 @@ class Key:
 
     basic: BasicKey = BasicKey.space  # type: ignore
     modifier: ModifierKey = ModifierKey.NULL
+
+    def __str__(self) -> str:
+        if self.modifier == ModifierKey.NULL:
+            return str(self.basic)
+        return ""
 
     @property
     def code(self) -> int:

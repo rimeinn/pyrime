@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 
 from . import SessionBase
 from .ime import IMEBase
-from .key import Key, ModifierKey
+from .key import Key
 from .ui import UI
 
 logger = logging.getLogger(__name__)
@@ -50,18 +50,11 @@ class RimeBase(IMEBase):
         """
         for key in keys:
             if not self.session.process_key(key.code, key.mask):
-                return (
-                    key.basic.pt_name
-                    if key.basic.pt_name != "space"
-                    else " "
-                    if key.modifier == ModifierKey.NULL
-                    else "",
-                    (self.ui.cursor,),
-                    0,
-                )
+                text = str(key)
+                return text if text.isprintable() else "", (), 0
         context = self.session.get_context()
         if context is None or context.menu.num_candidates == 0:
-            return self.session.get_commit_text(), (self.ui.cursor,), 0
+            return self.session.get_commit_text(), (), 0
         lines, col = self.ui.draw(context)
         return "", lines, col
 

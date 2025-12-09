@@ -48,7 +48,7 @@ class RimeLayout(Layout):
         self.window.width = width
         self.window.height = height
 
-    def update(self, lines: tuple[str, ...], col: int) -> None:
+    def update(self, lines: tuple[str, ...] = (), col: int = 0) -> None:
         self.content.buffer.text = "\n".join(lines)
         self.resize(
             (max(wcswidth(line) for line in lines) if len(lines) > 0 else 0),

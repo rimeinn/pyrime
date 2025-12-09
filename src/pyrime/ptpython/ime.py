@@ -79,6 +79,7 @@ class IME(RimeBase):
         ):
             return
         self.back_layout, self.app.layout = self.app.layout, self.back_layout
+        self.layout.update()
         fset = RimeBase.is_enabled.fset
         if fset:
             fset(self, enabled)
