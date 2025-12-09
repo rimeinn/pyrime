@@ -41,12 +41,12 @@ class RimeBase(IMEBase):
     ui: UI = field(default_factory=UI)
     enabled: bool = False
 
-    def draw(self, *keys: Key) -> tuple[str, list[str], int]:
+    def draw(self, *keys: Key) -> tuple[str, tuple[str, ...], int]:
         r"""Wrap ``UI.draw()``.
 
         :param keys:
         :type keys: Key
-        :rtype: tuple[str, list[str], int]
+        :rtype: tuple[str, tuple[str, ...], int]
         """
         for key in keys:
             if not self.session.process_key(key.code, key.mask):
@@ -56,12 +56,12 @@ class RimeBase(IMEBase):
                     else " "
                     if key.modifier == ModifierKey.NULL
                     else "",
-                    [self.ui.cursor],
+                    (self.ui.cursor,),
                     0,
                 )
         context = self.session.get_context()
         if context is None or context.menu.num_candidates == 0:
-            return self.session.get_commit_text(), [self.ui.cursor], 0
+            return self.session.get_commit_text(), (self.ui.cursor,), 0
         lines, col = self.ui.draw(context)
         return "", lines, col
 

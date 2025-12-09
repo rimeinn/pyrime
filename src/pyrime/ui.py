@@ -34,13 +34,13 @@ class UI:
     right_sep: str = "]"
     cursor: str = "|"
 
-    def draw(self, context: Context) -> tuple[list[str], int]:
+    def draw(self, context: Context) -> tuple[tuple[str, ...], int]:
         r"""Draw UI.
 
         :param self:
         :param context:
         :type context: Context
-        :rtype: tuple[list[str], int]
+        :rtype: tuple[tuple[str, ...], int]
         """
         if context.composition.preedit is None:
             preedit = ""
@@ -81,4 +81,4 @@ class UI:
             col = col - num
         if not context.menu.is_last_page and context.menu.num_candidates > 0:
             candidates_ = candidates_ + self.right
-        return [preedit, candidates_], col
+        return (preedit, candidates_), col
