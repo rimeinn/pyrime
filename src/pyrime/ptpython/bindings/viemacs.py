@@ -18,14 +18,14 @@ from prompt_toolkit.key_binding.vi_state import InputMode
 from prompt_toolkit.selection import SelectionType
 
 if TYPE_CHECKING:
-    from ..rime import Rime
+    from ..ime import IME
 
 
-def load_viemacs_bindings(rime: "Rime") -> KeyBindings:
+def load_viemacs_bindings(rime: "IME") -> KeyBindings:
     r"""Viemacs.
 
     :param rime:
-    :type rime: Rime
+    :type rime: IME
     :rtype: KeyBindings
     """
     key_bindings = KeyBindings()

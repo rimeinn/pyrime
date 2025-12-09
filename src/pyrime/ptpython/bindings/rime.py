@@ -14,7 +14,7 @@ from prompt_toolkit.keys import Keys
 from ...key import Key, ModifierKey
 
 if TYPE_CHECKING:
-    from ..rime import Rime
+    from ..ime import IME
 
 KEYS = {
     ("s-tab",),
@@ -70,12 +70,12 @@ KEYS = tuple(KEYS)
 
 
 def load_rime_bindings(
-    rime: "Rime", keys_set: tuple[tuple[Keys | str, ...], ...] = KEYS
+    rime: "IME", keys_set: tuple[tuple[Keys | str, ...], ...] = KEYS
 ) -> KeyBindings:
     r"""Load rime bindings.
 
     :param rime:
-    :type rime: Rime
+    :type rime: IME
     :param keys_set:
     :type keys_set: tuple[tuple[Keys | str, ...], ...]
     :rtype: KeyBindings

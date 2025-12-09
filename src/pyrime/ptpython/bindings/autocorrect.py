@@ -11,16 +11,16 @@ from prompt_toolkit.key_binding.key_bindings import KeyBindings
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 
 if TYPE_CHECKING:
-    from ..rime import Rime
+    from ..ime import IME
 
 
 def load_autocorrect_bindings(
-    rime: "Rime", corrections: dict[str, str]
+    rime: "IME", corrections: dict[str, str]
 ) -> KeyBindings:
     r"""Load autocorrect bindings.
 
     :param rime:
-    :type rime: Rime
+    :type rime: IME
     :param corrections:
     :type corrections: dict[str, str]
     :rtype: KeyBindings

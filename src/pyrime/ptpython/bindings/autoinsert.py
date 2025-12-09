@@ -9,7 +9,7 @@ from prompt_toolkit.key_binding.key_bindings import KeyBindings
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 
 if TYPE_CHECKING:
-    from ..rime import Rime
+    from ..ime import IME
 
 
 def insert(event: KeyPressEvent, pre: str = "(", post: str = ")") -> None:
@@ -36,11 +36,11 @@ def insert(event: KeyPressEvent, pre: str = "(", post: str = ")") -> None:
     event.current_buffer.validate_and_handle()
 
 
-def load_autoinsert_bindings(rime: "Rime") -> KeyBindings:
+def load_autoinsert_bindings(rime: "IME") -> KeyBindings:
     r"""Load autoinsert bindings.
 
     :param rime:
-    :type rime: Rime
+    :type rime: IME
     :rtype: KeyBindings
     """
     key_bindings = KeyBindings()

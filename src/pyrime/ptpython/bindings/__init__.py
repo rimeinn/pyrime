@@ -22,16 +22,16 @@ from .smartinput import load_smartinput_bindings
 from .viemacs import load_viemacs_bindings
 
 if TYPE_CHECKING:
-    from ..rime import Rime
+    from ..ime import IME
 
 
 def load_key_bindings(
-    rime: "Rime", keys_set: tuple[tuple[Keys | str, ...], ...] = KEYS
+    rime: "IME", keys_set: tuple[tuple[Keys | str, ...], ...] = KEYS
 ) -> KeyBindingsBase:
     r"""Load key bindings.
 
     :param rime:
-    :type rime: Rime
+    :type rime: IME
     :param keys_set:
     :type keys_set: tuple[tuple[Keys | str, ...], ...]
     :rtype: KeyBindingsBase

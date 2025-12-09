@@ -13,14 +13,14 @@ from prompt_toolkit.key_binding.key_bindings import KeyBindings
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 
 if TYPE_CHECKING:
-    from ..rime import Rime
+    from ..ime import IME
 
 
-def load_smartinput_bindings(rime: "Rime") -> KeyBindings:
+def load_smartinput_bindings(rime: "IME") -> KeyBindings:
     r"""Smartinput.
 
     :param rime:
-    :type rime: Rime
+    :type rime: IME
     :rtype: KeyBindings
     """
     key_bindings = KeyBindings()

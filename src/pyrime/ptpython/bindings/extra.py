@@ -16,14 +16,14 @@ from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 from ...key import Key, ModifierKey
 
 if TYPE_CHECKING:
-    from ..rime import Rime
+    from ..ime import IME
 
 
-def load_extra_bindings(rime: "Rime") -> KeyBindings:
+def load_extra_bindings(rime: "IME") -> KeyBindings:
     r"""Extra.
 
     :param rime:
-    :type rime: Rime
+    :type rime: IME
     :rtype: KeyBindings
     """
     key_bindings = KeyBindings()

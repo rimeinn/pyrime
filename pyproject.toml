@@ -33,7 +33,7 @@ dependencies = ["platformdirs"]
 cli = ["getch"]
 color = ["colorama"]
 dev = ["pytest-cov", "wcwidth", "prompt-toolkit"]
-prompt-toolkit = ["prompt-toolkit"]
+prompt-toolkit = ["prompt-toolkit", "wcwidth"]
 ptpython = ["ptpython", "wcwidth"]
 nvim = ["pynvim", "wcwidth"]
 

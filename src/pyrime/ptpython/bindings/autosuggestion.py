@@ -13,14 +13,14 @@ from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 from prompt_toolkit.keys import Keys
 
 if TYPE_CHECKING:
-    from ..rime import Rime
+    from ..ime import IME
 
 
-def load_autosuggestion_bindings(rime: "Rime") -> KeyBindings:
+def load_autosuggestion_bindings(rime: "IME") -> KeyBindings:
     r"""Autosuggestion.
 
     :param rime:
-    :type rime: Rime
+    :type rime: IME
     :rtype: KeyBindings
     """
     key_bindings = KeyBindings()
@@ -33,7 +33,7 @@ def load_autosuggestion_bindings(rime: "Rime") -> KeyBindings:
 
         :rtype: bool
         """
-        app = rime.repl.app
+        app = rime.app
         return (
             app.current_buffer.suggestion is not None
             and len(app.current_buffer.suggestion.text) > 0
