@@ -13,8 +13,6 @@ from prompt_toolkit.key_binding.bindings.named_commands import (
 from prompt_toolkit.key_binding.key_bindings import KeyBindings
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 
-from ...key import Key, ModifierKey
-
 if TYPE_CHECKING:
     from ..ime import IME
 
@@ -30,40 +28,32 @@ def load_extra_bindings(rime: "IME") -> KeyBindings:
     insert_mode = rime.insert_mode
     handle = key_bindings.add
 
-    @handle(
-        *Key.new("enter", ModifierKey.Shift)._keys,
-        filter=~rime.preedit_available,
-    )
-    @handle(
-        *Key.new("enter", ModifierKey.Control)._keys,
-        filter=~rime.preedit_available,
-    )
-    @handle(
-        *Key.new("enter", ModifierKey.Control | ModifierKey.Shift)._keys,
-        filter=~rime.preedit_available,
-    )
-    @handle(
-        *Key.new("enter", ModifierKey.Shift | ModifierKey.Alt)._keys,
-        filter=~rime.preedit_available,
-    )
-    @handle(
-        *Key.new("enter", ModifierKey.Control | ModifierKey.Alt)._keys,
-        filter=~rime.preedit_available,
-    )
-    @handle(
-        *Key.new(
-            "enter", ModifierKey.Control | ModifierKey.Shift | ModifierKey.Alt
-        )._keys,
-        filter=~rime.preedit_available,
-    )
-    def _(event: KeyPressEvent) -> None:
-        """`<https://github.com/prompt-toolkit/python-prompt-toolkit/issues/2006>_`
-
-        :param event:
-        :type event: KeyPressEvent
-        :rtype: None
-        """
-        event.current_buffer.validate_and_handle()
+    # @handle(
+    #     filter=~rime.preedit_available,
+    # )
+    # @handle(
+    #     filter=~rime.preedit_available,
+    # )
+    # @handle(
+    #     filter=~rime.preedit_available,
+    # )
+    # @handle(
+    #     filter=~rime.preedit_available,
+    # )
+    # @handle(
+    #     filter=~rime.preedit_available,
+    # )
+    # @handle(
+    #     filter=~rime.preedit_available,
+    # )
+    # def _(event: KeyPressEvent) -> None:
+    #     """`<https://github.com/prompt-toolkit/python-prompt-toolkit/issues/2006>_`
+    #
+    #     :param event:
+    #     :type event: KeyPressEvent
+    #     :rtype: None
+    #     """
+    #     event.current_buffer.validate_and_handle()
 
     @handle("c-j", filter=insert_mode)
     def _(event: KeyPressEvent) -> None:

@@ -58,9 +58,8 @@ def insert(event: KeyPressEvent, pre: str = "(", post: str = ")") -> None:
 
 def load_autoinsert_bindings(
     rime: "IME",
-    insertions: dict[
-        tuple[str, str], dict[tuple[Keys | str, ...], Filter]
-    ] = INSERTIONS,
+    insertions: dict[tuple[str, str], dict[tuple[Keys | str, ...], Filter]]
+    | None = None,
 ) -> KeyBindings:
     r"""Load autoinsert bindings.
 
@@ -68,10 +67,13 @@ def load_autoinsert_bindings(
     :type rime: IME
     :param insertions:
     :type insertions: tuple[str, str], dict[tuple[Keys | str, ...], Filter]
+                    | None
     :rtype: KeyBindings
     """
     key_bindings = KeyBindings()
     handle = key_bindings.add
+    if insertions is None:
+        insertions = INSERTIONS
 
     for (pre, post), filters in insertions.items():
         for keys, filter in filters.items():

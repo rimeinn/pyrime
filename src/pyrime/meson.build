@@ -35,13 +35,19 @@ py.install_sources(
     '__main__.py',
     'py.typed',
     'api.pyi',
-    'ime.py',
     'key.py',
     'rime.py',
     'session.py',
     'ui.py',
   ],
   subdir: 'pyrime',
+)
+py.install_sources(
+  [
+    'ime/__init__.py',
+    'ime/key.py',
+  ],
+  subdir: 'pyrime/ime',
 )
 py.install_sources(
   [

@@ -49,9 +49,8 @@ class RimeBase(IMEBase):
         :rtype: tuple[str, tuple[str, ...], int]
         """
         for key in keys:
-            if not self.session.process_key(key.basic, key.modifier):
-                text = str(key)
-                return text if text.isprintable() else "", (), 0
+            if not self.session.process_key(*key):
+                return str(key), (), 0
         context = self.session.get_context()
         if context is None or context.menu.num_candidates == 0:
             return self.session.get_commit_text(), (), 0
