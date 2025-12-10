@@ -56,6 +56,7 @@ class pt_key_name(str):
 
 
 ALL_CHARS = tuple(chr(i) for i in range(ord(" "), ord("~") + 1))
+EXTRA_KEYS_SET = tuple(tuple(f"\x1b[27;{i};13~") for i in (2, 5, 6, 7, 8))
 
 
 def load_rime_bindings(
@@ -65,7 +66,8 @@ def load_rime_bindings(
         + tuple((Keys.Escape, k) for k in ALL_KEYS if k != Keys.Escape)
         + tuple((k,) for k in ALL_CHARS)
         + tuple((Keys.Escape, k) for k in ALL_CHARS)
-    ),
+    )
+    + EXTRA_KEYS_SET,
 ) -> KeyBindings:
     r"""Load rime bindings.
 

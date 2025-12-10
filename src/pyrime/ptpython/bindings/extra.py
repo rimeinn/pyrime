@@ -13,6 +13,8 @@ from prompt_toolkit.key_binding.bindings.named_commands import (
 from prompt_toolkit.key_binding.key_bindings import KeyBindings
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 
+from .rime import EXTRA_KEYS_SET
+
 if TYPE_CHECKING:
     from ..ime import IME
 
@@ -28,32 +30,17 @@ def load_extra_bindings(rime: "IME") -> KeyBindings:
     insert_mode = rime.insert_mode
     handle = key_bindings.add
 
-    # @handle(
-    #     filter=~rime.preedit_available,
-    # )
-    # @handle(
-    #     filter=~rime.preedit_available,
-    # )
-    # @handle(
-    #     filter=~rime.preedit_available,
-    # )
-    # @handle(
-    #     filter=~rime.preedit_available,
-    # )
-    # @handle(
-    #     filter=~rime.preedit_available,
-    # )
-    # @handle(
-    #     filter=~rime.preedit_available,
-    # )
-    # def _(event: KeyPressEvent) -> None:
-    #     """`<https://github.com/prompt-toolkit/python-prompt-toolkit/issues/2006>_`
-    #
-    #     :param event:
-    #     :type event: KeyPressEvent
-    #     :rtype: None
-    #     """
-    #     event.current_buffer.validate_and_handle()
+    for keys in EXTRA_KEYS_SET:
+
+        @handle(*keys, filter=~rime.preedit_available)
+        def _(event: KeyPressEvent) -> None:
+            """`<https://github.com/prompt-toolkit/python-prompt-toolkit/issues/2006>_`
+
+            :param event:
+            :type event: KeyPressEvent
+            :rtype: None
+            """
+            event.current_buffer.validate_and_handle()
 
     @handle("c-j", filter=insert_mode)
     def _(event: KeyPressEvent) -> None:
