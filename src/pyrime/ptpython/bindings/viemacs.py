@@ -15,6 +15,7 @@ from prompt_toolkit.filters.app import vi_navigation_mode
 from prompt_toolkit.key_binding.key_bindings import KeyBindings
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 from prompt_toolkit.key_binding.vi_state import InputMode
+from prompt_toolkit.keys import Keys
 from prompt_toolkit.selection import SelectionType
 
 if TYPE_CHECKING:
@@ -32,7 +33,7 @@ def load_viemacs_bindings(rime: "IME") -> KeyBindings:
     insert_mode = rime.insert_mode
     handle = key_bindings.add
 
-    @handle("escape", filter=insert_mode)
+    @handle(Keys.Escape, filter=insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 

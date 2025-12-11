@@ -12,6 +12,7 @@ from prompt_toolkit.key_binding.bindings.named_commands import (
 )
 from prompt_toolkit.key_binding.key_bindings import KeyBindings
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
+from prompt_toolkit.keys import Keys
 
 from .rime import EXTRA_KEYS_SET
 
@@ -42,7 +43,7 @@ def load_extra_bindings(rime: "IME") -> KeyBindings:
             """
             event.current_buffer.validate_and_handle()
 
-    @handle("c-j", filter=insert_mode)
+    @handle(Keys.ControlJ, filter=insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -53,7 +54,11 @@ def load_extra_bindings(rime: "IME") -> KeyBindings:
         buffer = event.current_buffer
         buffer.newline()
 
-    @handle("c-x", "c-j", filter=emacs_insert_mode & ~rime.preedit_available)
+    @handle(
+        Keys.ControlX,
+        Keys.ControlJ,
+        filter=emacs_insert_mode & ~rime.preedit_available,
+    )
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -64,7 +69,7 @@ def load_extra_bindings(rime: "IME") -> KeyBindings:
         buffer = event.current_buffer
         buffer.join_next_line()
 
-    @handle("escape", "m", filter=insert_mode)
+    @handle(Keys.Escape, "m", filter=insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -82,7 +87,7 @@ def load_extra_bindings(rime: "IME") -> KeyBindings:
             forward_char(event)
         event.cli.current_buffer.insert_text(w)
 
-    @handle("escape", "w", filter=insert_mode)
+    @handle(Keys.Escape, "w", filter=insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
@@ -92,7 +97,7 @@ def load_extra_bindings(rime: "IME") -> KeyBindings:
         """
         unix_word_rubout(event)
 
-    @handle("c-x", "c-e", filter=insert_mode)
+    @handle(Keys.ControlX, Keys.ControlE, filter=insert_mode)
     @handle("g", "h", filter=vi_navigation_mode & ~rime.preedit_available)
     def _(event: KeyPressEvent) -> None:
         """.
@@ -104,7 +109,7 @@ def load_extra_bindings(rime: "IME") -> KeyBindings:
         buffer = event.current_buffer
         buffer.open_in_editor()
 
-    @handle("c-\\", filter=insert_mode)
+    @handle(Keys.ControlBackslash, filter=insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 

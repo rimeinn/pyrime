@@ -7,7 +7,7 @@ Refer `zsh-autosuggestions <https://github.com/zsh-users/zsh-autosuggestions>`_.
 import re
 from typing import TYPE_CHECKING
 
-from prompt_toolkit.filters import Condition, emacs_mode
+from prompt_toolkit.filters import Condition
 from prompt_toolkit.key_binding.key_bindings import KeyBindings
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 from prompt_toolkit.keys import Keys
@@ -40,8 +40,8 @@ def load_autosuggestion_bindings(rime: "IME") -> KeyBindings:
             and app.current_buffer.document.is_cursor_at_the_end
         )
 
-    @handle("right", filter=suggestion_available & insert_mode)
-    @handle("c-f", filter=suggestion_available & insert_mode)
+    @handle(Keys.Right, filter=suggestion_available & insert_mode)
+    @handle(Keys.ControlF, filter=suggestion_available & insert_mode)
     def _(event: "KeyPressEvent") -> None:
         """.
 
@@ -57,7 +57,11 @@ def load_autosuggestion_bindings(rime: "IME") -> KeyBindings:
                 suggestion.text[0 : min(event.arg, len(suggestion.text))]
             )
 
-    @handle("c-]", Keys.Any, filter=suggestion_available & emacs_mode)
+    @handle(
+        Keys.ControlSquareClose,
+        Keys.Any,
+        filter=suggestion_available & insert_mode,
+    )
     def _(event: "KeyPressEvent") -> None:
         """.
 

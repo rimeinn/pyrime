@@ -55,7 +55,7 @@ Source = "https://github.com/rimeinn/pyrime"
 number = true
 
 [tool.codespell]
-ignore-words-list = "rime, rightt"
+ignore-words-list = "rime, rightt, controle"
 
 [tool.doq]
 template_path = "templates"

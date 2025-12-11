@@ -103,7 +103,7 @@ class KeyBase(ABC):
                     f"{len(name)} keys are not implemented"
                 ) from e
         modifier = 0
-        name = name[1:-2]
+        name = name[1:-1]
         prefix, _, name = name.rpartition("-")
         while prefix:
             try:

@@ -14,6 +14,7 @@ from prompt_toolkit.key_binding.bindings.named_commands import (
 )
 from prompt_toolkit.key_binding.key_bindings import KeyBindings
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
+from prompt_toolkit.keys import Keys
 
 if TYPE_CHECKING:
     from ..ime import IME
@@ -30,7 +31,7 @@ def load_autopair_bindings(rime: "IME") -> KeyBindings:
     insert_mode = rime.insert_mode
     handle = key_bindings.add
 
-    @handle("c-h", filter=insert_mode)
+    @handle(Keys.Backspace, filter=insert_mode)
     def _(event: KeyPressEvent) -> None:
         """.
 
