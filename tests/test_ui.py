@@ -43,5 +43,5 @@ class Test:
             ),
         )
         ui = UI()
-        lines = ["w|", "[① 我]② 为 ③ 玩 ④ 问 ⑤ 无 ⑥ 万 ⑦ 完 ⑧ 网 ⑨ 王 ⓪ 外 |>"]
+        lines = ("w|", "[① 我]② 为 ③ 玩 ④ 问 ⑤ 无 ⑥ 万 ⑦ 完 ⑧ 网 ⑨ 王 ⓪ 外 |>")
         assert ui.draw(context) == (lines, 0)
