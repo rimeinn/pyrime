@@ -8,10 +8,10 @@ import logging
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
-from .ime import SessionBase
 from .ime.ime import IMEBase
 from .ime.ui import UI
 from .key import Key
+from .utils import SessionBase
 
 logger = logging.getLogger(__name__)
 

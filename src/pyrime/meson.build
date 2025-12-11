@@ -38,6 +38,7 @@ py.install_sources(
     'key.py',
     'rime.py',
     'session.py',
+    'utils.py',
   ],
   subdir: 'pyrime',
 )
