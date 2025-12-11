@@ -1,7 +1,7 @@
 r"""Test draw UI."""
 
-from pyrime import Candidate, Composition, Context, Menu
-from pyrime.ui import UI
+from pyrime.ime import Candidate, Composition, Context, Menu
+from pyrime.ime.ui import UI
 
 
 class Test:
