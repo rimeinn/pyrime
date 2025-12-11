@@ -24,17 +24,16 @@ from cython.cimports.rime_api import (
 from platformdirs import site_data_dir, user_config_dir
 from platformdirs import user_data_dir as _user_data_dir
 
-from . import (
+from . import LogLevel, __version__
+from . import __name__ as NAME
+from .ime import (
     Candidate,
     Commit,
     Composition,
     Context,
-    LogLevel,
     Menu,
     SchemaListItem,
-    __version__,
 )
-from . import __name__ as NAME
 
 @dataclass
 class Traits:

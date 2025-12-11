@@ -78,9 +78,9 @@ pacboy -S --noconfirm pkg-config librime gcc
 ### Binding
 
 ```python
+from pyrime.ime.ui import UI
 from pyrime.key import Key
 from pyrime.session import Session
-from pyrime.ui import UI
 
 session = Session()
 key = Key.new("n")

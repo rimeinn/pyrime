@@ -38,14 +38,15 @@ py.install_sources(
     'key.py',
     'rime.py',
     'session.py',
-    'ui.py',
   ],
   subdir: 'pyrime',
 )
 py.install_sources(
   [
     'ime/__init__.py',
+    'ime/ime.py',
     'ime/key.py',
+    'ime/ui.py',
   ],
   subdir: 'pyrime/ime',
 )

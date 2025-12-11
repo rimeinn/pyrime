@@ -28,15 +28,16 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = ["platformdirs"]
+# change wcwidth to pyime after pyime is standalone
+dependencies = ["platformdirs", "wcwidth"]
 
 [project.optional-dependencies]
 cli = ["getch"]
 color = ["colorama"]
-dev = ["pytest-cov", "wcwidth", "prompt-toolkit"]
-prompt-toolkit = ["prompt-toolkit", "wcwidth"]
-ptpython = ["ptpython", "wcwidth"]
-nvim = ["pynvim", "wcwidth"]
+dev = ["pytest-cov", "prompt-toolkit"]
+prompt-toolkit = ["prompt-toolkit"]
+ptpython = ["ptpython"]
+nvim = ["pynvim"]
 
 [[project.authors]]
 name = "Wu, Zhenyu"
