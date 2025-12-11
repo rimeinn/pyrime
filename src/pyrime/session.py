@@ -7,8 +7,9 @@ Refer <https://github.com/rimeinn/rime.nvim/blob/main/lua/rime/session.lua>
 
 from dataclasses import dataclass, field
 
+from . import SchemaListItem
 from .api import API, Traits
-from .ime import Commit, Context, SchemaListItem
+from .ime import Commit, Context
 from .utils import SessionBase
 
 

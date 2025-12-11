@@ -4,7 +4,8 @@ r"""Utils
 
 from dataclasses import dataclass
 
-from .ime import Commit, Context, SchemaListItem
+from . import SchemaListItem
+from .ime import Commit, Context
 
 
 @dataclass

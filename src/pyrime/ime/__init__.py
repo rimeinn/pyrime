@@ -57,11 +57,3 @@ class Commit:
     r"""Commit."""
 
     text: str
-
-
-@dataclass
-class SchemaListItem:
-    r"""Schema list item."""
-
-    schema_id: str
-    name: str
