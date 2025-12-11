@@ -61,7 +61,7 @@ class Commit:
 
 @dataclass
 class SchemaListItem:
-    r"""Schemalistitem."""
+    r"""Schema list item."""
 
     schema_id: str
     name: str
@@ -69,7 +69,7 @@ class SchemaListItem:
 
 @dataclass
 class SessionBase:
-    r"""A session for Rime"""
+    r"""A dummy session."""
 
     def process_key(self, keycode: int, mask: int) -> bool:
         r"""Process key.
