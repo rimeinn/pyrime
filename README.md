@@ -117,15 +117,12 @@ print(Traits.user_data_dir)
 
 ### Frontend
 
+#### Enable
+
 `~/.config/ptpython/config.py`:
 
 ```python
 from ptpython.repl import PythonRepl
-from prompt_toolkit.filters.app import (
-    emacs_insert_mode,
-    vi_insert_mode,
-    vi_navigation_mode,
-)
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 from pyrime.ptpython.rime import Rime
 
@@ -156,10 +153,16 @@ def configure(repl: PythonRepl) -> None:
     )
 ```
 
-If you have defined some key bindings which will disturb rime, try:
+#### Key Bindings
+
+If you have defined some key bindings in `*_insert_mode`, they can disturb rime.
+try:
 
 ```python
-    @repl.add_key_binding("c-h", filter=emacs_insert_mode & ~rime.preedit_available())
+    # from prompt_toolkit.filters.app import emacs_insert_mode, vi_insert_mode
+
+    # @repl.add_key_binding("c-h", filter=emacs_insert_mode | vi_insert_mode)
+    @repl.add_key_binding("c-h", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         pass
 ```
@@ -168,6 +171,8 @@ If you want to exit rime in `vi_navigation_mode`, refer the following code of
 `pyrime.ptpython.bindings.viemacs`'s `load_viemacs_bindings()`:
 
 ```python
+    from prompt_toolkit.filters.app import vi_navigation_mode
+
     @repl.add_key_binding("escape", filter=rime.insert_mode)
     def _(event: KeyPressEvent) -> None:
         """Switch insert mode to normal mode.
