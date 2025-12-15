@@ -94,6 +94,7 @@ class KeyBase(ABC):
         :type name: str
         :rtype: Self
         """
+        # <space> -> ' '
         name = cls.aliases.get(name.lower(), name)
         if not (name.startswith("<") and name.endswith(">")):
             try:
@@ -115,14 +116,14 @@ class KeyBase(ABC):
             prefix, _, name = name.rpartition("-")
         # make "-" work
         name = _ + name
+        # space -> ' '
+        name = cls.aliases.get(f"<{name.lower()}>", name)
         # C-A is same as c-a
         if modifier == cls.modifier_flag.C:
             name = name.lower()
         if len(name) == 1:
             return cls(ord(name), modifier)
-        name = name.lower()
-        # space -> ' '
-        basic = cls.convert(cls.aliases.get(f"<{name}>", name))
+        basic = cls.convert(name.lower())
         return cls(basic, modifier)
 
     @classmethod
