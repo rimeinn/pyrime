@@ -21,7 +21,8 @@ CODES = reduce(
             (
                 v,
                 x[0]
-                + k.lower()
+                + k
+                .lower()
                 .replace("bright", "bold")
                 .replace("dim", "italic")
                 .replace(
