@@ -1,6 +1,6 @@
 [build-system]
 # https://github.com/elijahr/python-autopxd2/issues/60
-requires = ['meson-python', 'cython', 'autopxd2 != 3.0.0']
+requires = ['meson-python', 'cython', 'autopxd2 > 3.2.0']
 build-backend = 'mesonpy'
 
 [project]
