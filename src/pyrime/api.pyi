@@ -61,6 +61,7 @@ class Traits:
     distribution_code_name: str = NAME
     distribution_version: str = __version__
     app_name: str = "rime." + NAME
+    modules: tuple[str, ...] = ("default",)
     min_log_level: LogLevel = LogLevel.FATAL
     data_size: int = 0
     address: int = 0
@@ -90,6 +91,10 @@ class Traits:
             log_dir=self.log_dir.encode(),
         )
         traits.data_size = c.sizeof(RimeTraits) - c.sizeof(traits.data_size)
+        traits.modules: c.array[c.p_const_char, len(self.modules) + 1] = [
+            self.modules[0].encode(),
+            c.NULL,
+        ]
         self.data_size = traits.data_size
         self.address = PyLong_FromVoidPtr(c.address(traits))
 
