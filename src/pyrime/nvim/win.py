@@ -41,7 +41,7 @@ class Win:
 
         :rtype: bool
         """
-        return len(self.lines) == 2
+        return len(self.lines) > 1
 
     def update(self, lines: tuple[str, ...] = (), col: int = 0) -> None:
         r"""Update.

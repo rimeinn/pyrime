@@ -126,7 +126,10 @@ class IME(RimeBase, _IME):
 
         :rtype: bool
         """
-        return self.layout.window.height == 2
+        return (
+            isinstance(self.layout.window.height, int)
+            and self.layout.window.height > 1
+        )
 
     @property
     def preedit_available(self) -> Condition:
