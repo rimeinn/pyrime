@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 
 from .ime.ime import IMEBase
 from .ime.ui import UI
-from .ime.ui.vertical import VerticalUI as HorizontalUI
+from .ime.ui.horizontal import HorizontalUI
 from .key import Key
 from .utils import SessionBase
 
