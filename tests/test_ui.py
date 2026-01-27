@@ -1,7 +1,7 @@
 r"""Test draw UI."""
 
 from pyrime.ime import Candidate, Composition, Context, Menu
-from pyrime.ime.ui import UI
+from pyrime.ime.ui.horizontal import HorizontalUI
 
 
 class Test:
@@ -42,6 +42,6 @@ class Test:
                 ],
             ),
         )
-        ui = UI()
+        ui = HorizontalUI()
         lines = ("w|", "[① 我]② 为 ③ 玩 ④ 问 ⑤ 无 ⑥ 万 ⑦ 完 ⑧ 网 ⑨ 王 ⓪ 外 |>")
         assert ui.draw(context) == (lines, 0)
