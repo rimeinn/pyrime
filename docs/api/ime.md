@@ -5,3 +5,9 @@
 module:
 ---
 ```
+
+```{autofile} ../../src/*/ime/ui/*.py
+---
+module:
+---
+```

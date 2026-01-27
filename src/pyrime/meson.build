@@ -47,9 +47,16 @@ py.install_sources(
     'ime/__init__.py',
     'ime/ime.py',
     'ime/key.py',
-    'ime/ui.py',
   ],
   subdir: 'pyrime/ime',
+)
+py.install_sources(
+  [
+    'ime/ui/__init__.py',
+    'ime/ui/horizontal.py',
+    'ime/ui/vertical.py',
+  ],
+  subdir: 'pyrime/ime/ui',
 )
 py.install_sources(
   [

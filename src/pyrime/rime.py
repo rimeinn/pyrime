@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 
 from .ime.ime import IMEBase
 from .ime.ui import UI
+from .ime.ui.horizontal import HorizontalUI
 from .key import Key
 from .utils import SessionBase
 
@@ -38,7 +39,7 @@ class RimeBase(IMEBase):
     """
 
     session: SessionBase = field(default_factory=get_session)
-    ui: UI = field(default_factory=UI)
+    ui: UI = field(default_factory=HorizontalUI)
     enabled: bool = False
 
     def draw(self, *keys: Key) -> tuple[str, tuple[str, ...], int]:
