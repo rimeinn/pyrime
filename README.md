@@ -78,14 +78,14 @@ pacboy -S --noconfirm pkg-config librime gcc
 ### Binding
 
 ```python
-from pyrime.ime.ui.vertical import UI
+from pyrime.ime.ui.vertical import VerticalUI
 from pyrime.key import Key
 from pyrime.session import Session
 
 session = Session()
 key = Key.new("n")
 ui = UI()
-if not session.process_key(key.code, key.mask):
+if not session.process_key(key.basic, key.modifier):
     raise Exception
 context = session.get_context()
 if context is None:
