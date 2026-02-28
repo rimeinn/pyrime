@@ -4,7 +4,7 @@ r"""This module can be called by
 
 from getch import getch
 
-from .key import BasicKey, Key
+from .key import Key
 from .rime import RimeBase
 
 if __name__ == "__main__":
@@ -15,5 +15,5 @@ if __name__ == "__main__":
             c = getch()
         except OverflowError:
             break
-        key = Key(BasicKey(ord(c)))
+        key = Key.new(c)
         rime(print, key)
