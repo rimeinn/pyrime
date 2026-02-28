@@ -78,7 +78,7 @@ pacboy -S --noconfirm pkg-config librime gcc
 ### Binding
 
 ```python
-from pyrime.ime.ui import UI
+from pyrime.ime.ui.vertical import UI
 from pyrime.key import Key
 from pyrime.session import Session
 
