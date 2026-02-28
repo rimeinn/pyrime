@@ -85,7 +85,7 @@ from pyrime.session import Session
 session = Session()
 key = Key.new("n")
 ui = UI()
-if not session.process_key(key.basic, key.modifier):
+if not session.process_key(*key):
     raise Exception
 context = session.get_context()
 if context is None:
