@@ -49,9 +49,9 @@ applications such as ptpython.
 
 This project is consist of two parts:
 
-- A python binding of librime
-- A librime frontend on ptpython
-- A librime frontend on neovim (TODO)
+- [x] A python binding of librime
+- [x] A librime frontend on ptpython
+- [ ] A librime frontend on neovim
 
 ## Dependence
 
