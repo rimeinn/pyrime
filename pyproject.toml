@@ -102,6 +102,9 @@ archs = ["all"]
 # cp314t-macosx-*:
 # /bin/sh: pip: command not found
 skip = "*37-* *38-* *39-* *310-* cp314t-macosx_* *_universal2 *-macosx_x86_64 *-win* *-manylinux_*"
+# pyrime-0.2.3-cp311-cp311-macosx_26_0_arm64.whl) dependency is incompatible with the current platform
+# hint: The wheel is compatible with macOS (`macosx_26_0_arm64`), but you're on macOS (`macosx_15_0_arm64`)
+test-skip = "*-macosx_*"
 build-frontend = "build[uv]"
 before-test = "pip install .[dev]"
 test-command = "pytest {project}"
@@ -112,7 +115,8 @@ manylinux-ppc64le-image = "manylinux_2_28"
 manylinux-s390x-image = "manylinux_2_28"
 
 [tool.cibuildwheel.environment]
-MACOSX_DEPLOYMENT_TARGET = "15.0"
+# librime.1.17.0.dylib has a minimum target of 26.0
+MACOSX_DEPLOYMENT_TARGET = "26.0"
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-manylinux_*"]
