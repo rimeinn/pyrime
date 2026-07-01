@@ -1,5 +1,28 @@
-rime_dep = dependency('rime')
-deps = [rime_dep]
+# Try pkg-config first (Linux/macOS), fall back to env vars (Windows)
+rime_dep = dependency('rime', required: false)
+
+if rime_dep.found()
+  deps = [rime_dep]
+  rime_inc_dir = run_command(
+    'pkg-config', '--variable=includedir', 'rime', check: true,
+  ).stdout().strip()
+else
+  # Windows: read from LIBRIME_INCLUDE_DIR / LIBRIME_LIB_DIR
+  rime_inc_dir = run_command(
+    'cmd', '/c', 'echo', '%LIBRIME_INCLUDE_DIR%', check: true,
+  ).stdout().strip().replace('\\', '/')
+  rime_lib_dir = run_command(
+    'cmd', '/c', 'echo', '%LIBRIME_LIB_DIR%', check: true,
+  ).stdout().strip().replace('\\', '/')
+
+  cc = meson.get_compiler('c')
+  rime_dep = declare_dependency(
+    include_directories: include_directories(rime_inc_dir),
+    dependencies: cc.find_library('rime', dirs: rime_lib_dir),
+  )
+  deps = [rime_dep]
+endif
+
 # ubuntu jammy
 if meson.version().version_compare('<=0.61.2')
   py = import('python').find_installation()
@@ -15,7 +38,7 @@ conf_data.set(
   meson.project_version(),
   description: 'project version',
 )
-header_path = run_command('pkg-config', '--variable=includedir', 'rime', check: true).stdout().strip() + '/rime_api.h'
+header_path = rime_inc_dir + '/rime_api.h'
 configure_file(command: ['autopxd', header_path, 'rime_api.pxd'], output: 'rime_api.pxd')
 
 py.extension_module(
