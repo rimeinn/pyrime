@@ -2,7 +2,8 @@ r"""Provide ``__version__`` for
 `importlib.metadata.version() <https://docs.python.org/3/library/importlib.metadata.html#distribution-versions>`_.
 """
 
-import os, sys
+import os
+import sys
 from dataclasses import dataclass
 from enum import Enum, auto
 
