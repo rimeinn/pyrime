@@ -41,10 +41,11 @@ jobs:
       - uses: msys2/setup-msys2@v2
         if: runner.os == 'Windows'
         with:
+          msystem: clang64
           install: |
-            mingw-w64-x86_64-pkg-config mingw-w64-x86_64-librime
-            mingw-w64-x86_64-gcc mingw-w64-x86_64-ninja
-            mingw-w64-x86_64-python-pip
+            mingw-w64-clang-x86_64-pkg-config mingw-w64-clang-x86_64-librime
+            mingw-w64-clang-x86_64-clang mingw-w64-clang-x86_64-ninja
+            mingw-w64-clang-x86_64-python-pip
       - name: Install dependencies
         if: runner.os == 'Linux'
         run: |
@@ -79,10 +80,11 @@ jobs:
       - uses: msys2/setup-msys2@v2
         if: runner.os == 'Windows'
         with:
+          msystem: clang64
           install: |
-            mingw-w64-x86_64-pkg-config mingw-w64-x86_64-librime
-            mingw-w64-x86_64-gcc mingw-w64-x86_64-ninja
-            mingw-w64-x86_64-uv
+            mingw-w64-clang-x86_64-pkg-config mingw-w64-clang-x86_64-librime
+            mingw-w64-clang-x86_64-clang mingw-w64-clang-x86_64-ninja
+            mingw-w64-clang-x86_64-uv
       - name: Install dependencies
         if: runner.os == 'Linux'
         run: |
