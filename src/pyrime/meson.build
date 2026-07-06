@@ -15,7 +15,7 @@ conf_data.set(
   meson.project_version(),
   description: 'project version',
 )
-header_path = run_command('pkg-config', '--variable=includedir', 'rime', check: true).stdout().strip() + '/rime_api.h'
+header_path = rime_dep.get_variable(pkgconfig: 'includedir') / 'rime_api.h'
 configure_file(command: ['autopxd', header_path, 'rime_api.pxd'], output: 'rime_api.pxd')
 
 py.extension_module(
