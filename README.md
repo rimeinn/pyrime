@@ -73,6 +73,10 @@ brew install librime pkg-config
 pacboy -S --noconfirm pkg-config librime gcc
 ```
 
+If you download librime from
+[github release](https://github.com/rime/librime/releases), ensure `rime.dll` in
+your `$PATH`.
+
 ## Usage
 
 ### Binding
