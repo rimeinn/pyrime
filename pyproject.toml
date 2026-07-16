@@ -1,43 +1,43 @@
 [build-system]
 # https://github.com/elijahr/python-autopxd2/issues/60
-requires = ['meson-python', 'cython', 'autopxd2 != 3.0.*, !=3.1.*']
-build-backend = 'mesonpy'
+requires = ["autopxd2 != 3.0.*, !=3.1.*", "cython", "meson-python"]
+build-backend = "mesonpy"
 
 [project]
 name = "pyrime"
-dynamic = ["version"]
 description = "rime for python, attached to prompt-toolkit keybindings for some prompt-toolkit applications such as ptpython"
 readme = "README.md"
 # Self
 requires-python = ">= 3.11"
-keywords = ["rime", "ptpython", "prompt-toolkit"]
+keywords = ["prompt-toolkit", "ptpython", "rime"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
-  "Topic :: Software Development :: Build Tools",
   "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+  "Operating System :: MacOS",
   "Operating System :: Microsoft :: Windows",
   "Operating System :: POSIX",
   "Operating System :: Unix",
-  "Operating System :: MacOS",
-  "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
+  "Topic :: Software Development :: Build Tools",
 ]
 # change wcwidth to pyime after pyime is standalone
 dependencies = ["platformdirs", "wcwidth"]
+dynamic = ["version"]
 
 [project.optional-dependencies]
 cli = ["getch"]
 color = ["colorama"]
 dev = ["pytest-cov", "prompt-toolkit"]
+nvim = ["pynvim"]
 prompt-toolkit = ["prompt-toolkit"]
 ptpython = ["ptpython"]
-nvim = ["pynvim"]
 
 [[project.authors]]
 name = "Wu, Zhenyu"
@@ -47,9 +47,9 @@ email = "wuzhenyu@ustc.edu"
 text = "GPL v3"
 
 [project.urls]
-Homepage = "https://pyrime.readthedocs.io"
-Download = "https://github.com/rimeinn/pyrime/releases"
 "Bug Report" = "https://github.com/rimeinn/pyrime/issues"
+Download = "https://github.com/rimeinn/pyrime/releases"
+Homepage = "https://pyrime.readthedocs.io"
 Source = "https://github.com/rimeinn/pyrime"
 
 [tool.mdformat]
@@ -101,7 +101,7 @@ archs = ["all"]
 # Almalinux 8's librime 1.3 is too old
 # cp314t-macosx-*:
 # /bin/sh: pip: command not found
-skip = "*37-* *38-* *39-* *310-* cp314t-macosx_* *_universal2 *-macosx_x86_64 *-win* *-manylinux_*"
+skip = "*37-* *38-* *39-* *310-* cp314t-macosx_* *_universal2 *-macosx_x86_64 *-win32 *-manylinux_*"
 # pyrime-0.2.3-cp311-cp311-macosx_26_0_arm64.whl) dependency is incompatible with the current platform
 # hint: The wheel is compatible with macOS (`macosx_26_0_arm64`), but you're on macOS (`macosx_15_0_arm64`)
 test-skip = "*-macosx_*"
@@ -134,6 +134,14 @@ before-all = "apk add librime-dev"
 select = ["*-macosx_*"]
 # AssertionError: uv not found
 before-all = "brew install librime uv"
+
+[[tool.cibuildwheel.overrides]]
+select = ["*-win_*"]
+before-all = """
+pip install uv
+scoop bucket add siku https://github.com/amorphobia/siku
+scoop install librime pkg-config
+"""
 
 # https://github.com/astral-sh/uv/issues/10260
 [[tool.cibuildwheel.overrides]]
