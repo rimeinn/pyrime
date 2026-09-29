@@ -53,7 +53,10 @@ class RimeBase(IMEBase):
             if not self.session.process_key(*key):
                 return str(key), (), 0
         context = self.session.get_context()
-        if context is None or context.menu.num_candidates == 0:
+        if context is None or (
+            context.menu.num_candidates == 0
+            and context.composition.preedit is None
+        ):
             return self.session.get_commit_text(), (), 0
         lines, col = self.ui.draw(context)
         return "", lines, col
