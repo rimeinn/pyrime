@@ -61,7 +61,7 @@ class Traits:
     distribution_code_name: str = NAME
     distribution_version: str = __version__
     app_name: str = "rime." + NAME
-    modules: tuple[str, ...] = ("default",)
+    modules: tuple[str, ...] = ("default", "lua", "octagram", "predict")
     min_log_level: LogLevel = LogLevel.FATAL
     data_size: int = 0
     address: int = 0
