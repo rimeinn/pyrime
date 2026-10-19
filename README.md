@@ -178,36 +178,38 @@ If you want to exit rime in `vi_navigation_mode`, refer the following code of
 `pyrime.ptpython.bindings.viemacs`'s `load_viemacs_bindings()`:
 
 ```python
-    from prompt_toolkit.filters.app import vi_navigation_mode
+from prompt_toolkit.filters.app import vi_navigation_mode
 
-    @repl.add_key_binding("escape", filter=rime.insert_mode)
-    def _(event: KeyPressEvent) -> None:
-        """Switch insert mode to normal mode.
 
-        :param event:
-        :type event: KeyPressEvent
-        :rtype: None
-        """
-        # store rime status
-        rime.iminsert = rime.is_enabled
-        # disable rime
-        rime.is_enabled = False
-        event.app.editing_mode = EditingMode.VI
-        event.app.vi_state.input_mode = InputMode.NAVIGATION
+@repl.add_key_binding("escape", filter=rime.insert_mode)
+def _(event: KeyPressEvent) -> None:
+    """Switch insert mode to normal mode.
 
-    # and a, I, A, ...
-    @repl.add_key_binding("i", filter=vi_navigation_mode)
-    def _(event: KeyPressEvent) -> None:
-        """Switch normal mode to insert mode.
+    :param event:
+    :type event: KeyPressEvent
+    :rtype: None
+    """
+    # store rime status
+    rime.iminsert = rime.is_enabled
+    # disable rime
+    rime.is_enabled = False
+    event.app.editing_mode = EditingMode.VI
+    event.app.vi_state.input_mode = InputMode.NAVIGATION
 
-        :param event:
-        :type event: KeyPressEvent
-        :rtype: None
-        """
-        event.app.editing_mode = EditingMode.EMACS
-        event.app.vi_state.input_mode = InputMode.INSERT
-        # recovery rime status
-        rime.is_enabled = rime.iminsert
+
+# and a, I, A, ...
+@repl.add_key_binding("i", filter=vi_navigation_mode)
+def _(event: KeyPressEvent) -> None:
+    """Switch normal mode to insert mode.
+
+    :param event:
+    :type event: KeyPressEvent
+    :rtype: None
+    """
+    event.app.editing_mode = EditingMode.EMACS
+    event.app.vi_state.input_mode = InputMode.INSERT
+    # recovery rime status
+    rime.is_enabled = rime.iminsert
 ```
 
 It will remember rime status and enable it when reenter `vi_insert_mode` or
