@@ -80,19 +80,30 @@ class Traits:
                 raise NotADirectoryError(dir)
         os.makedirs(self.log_dir, exist_ok=True)
         c_min_log_level: c.int = self.min_log_level.value
+        # keep the encoded strings alive while librime reads them
+        shared_data_dir: bytes = self.shared_data_dir.encode()
+        user_data_dir: bytes = self.user_data_dir.encode()
+        distribution_name: bytes = self.distribution_name.encode()
+        distribution_code_name: bytes = self.distribution_code_name.encode()
+        distribution_version: bytes = self.distribution_version.encode()
+        app_name: bytes = self.app_name.encode()
+        log_dir: bytes = self.log_dir.encode()
         traits: RimeTraits = RimeTraits(
-            shared_data_dir=self.shared_data_dir.encode(),
-            user_data_dir=self.user_data_dir.encode(),
-            distribution_name=self.distribution_name.encode(),
-            distribution_code_name=self.distribution_code_name.encode(),
-            distribution_version=self.distribution_version.encode(),
-            app_name=self.app_name.encode(),
+            shared_data_dir=shared_data_dir,
+            user_data_dir=user_data_dir,
+            distribution_name=distribution_name,
+            distribution_code_name=distribution_code_name,
+            distribution_version=distribution_version,
+            app_name=app_name,
             min_log_level=c_min_log_level,
-            log_dir=self.log_dir.encode(),
+            log_dir=log_dir,
+            prebuilt_data_dir=c.NULL,
+            staging_dir=c.NULL,
         )
         traits.data_size = c.sizeof(RimeTraits) - c.sizeof(traits.data_size)
+        module: bytes = self.modules[0].encode()
         traits.modules: c.array[c.p_const_char, len(self.modules) + 1] = [
-            self.modules[0].encode(),
+            module,
             c.NULL,
         ]
         self.data_size = traits.data_size
