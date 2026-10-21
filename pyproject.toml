@@ -45,7 +45,7 @@ prompt-toolkit = ["prompt-toolkit"]
 ptpython = ["ptpython"]
 
 [build-system]
-requires = ["cython", "autopxd2 ~= 3.2", "meson-python"]
+requires = ["cython", "headerkit >= 0.47.4", "meson-python"]
 build-backend = "mesonpy"
 
 [tool.cibuildwheel]

@@ -10,7 +10,7 @@ else
 endif
 
 header_path = rime_dep.get_variable(pkgconfig: 'includedir') / 'rime_api.h'
-configure_file(command: ['autopxd', header_path, 'rime_api.pxd'], output: 'rime_api.pxd')
+configure_file(command: ['headerkit', header_path, '-orime_api.pxd'], output: 'rime_api.pxd')
 
 py.extension_module(
   'api',
