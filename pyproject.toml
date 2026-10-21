@@ -128,7 +128,7 @@ before-all = "apt-get -y install librime-dev"
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_*"]
-before-all = "apk add librime-dev"
+before-all = "apk add librime-dev clang-dev"
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-macosx_*"]
