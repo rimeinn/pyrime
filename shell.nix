@@ -5,9 +5,12 @@
 with pkgs;
 mkShell {
   name = "pyrime";
+  env = {
+    LD_LIBRARY_PATH = "${libclang.lib}/lib";
+  };
   buildInputs = [
     librime
-    libllvm
+    libclang
 
     ninja
     pkg-config
