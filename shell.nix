@@ -7,6 +7,7 @@ mkShell {
   name = "pyrime";
   buildInputs = [
     librime
+    libllvm
 
     ninja
     pkg-config
@@ -18,7 +19,6 @@ mkShell {
 
         meson-python
         cython
-        autopxd2
       ]
     ))
   ];

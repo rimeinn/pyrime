@@ -9,12 +9,6 @@ else
   py = import('python').find_installation(pure: false)
 endif
 
-conf_data = configuration_data()
-conf_data.set(
-  'PROJECT_VERSION',
-  meson.project_version(),
-  description: 'project version',
-)
 header_path = rime_dep.get_variable(pkgconfig: 'includedir') / 'rime_api.h'
 configure_file(command: ['autopxd', header_path, 'rime_api.pxd'], output: 'rime_api.pxd')
 
@@ -28,6 +22,13 @@ py.extension_module(
   subdir: 'pyrime',
   install: true,
   cython_args: ['-3I' + meson.current_build_dir()],
+)
+
+conf_data = configuration_data()
+conf_data.set(
+  'PROJECT_VERSION',
+  meson.project_version(),
+  description: 'project version',
 )
 py.install_sources(
   [

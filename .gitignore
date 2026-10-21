@@ -1,3 +1,4 @@
+*.lock
 *.pxd
 .mesonpy-native-file.ini
 .pybuild/
