@@ -6,7 +6,9 @@ with pkgs;
 mkShell {
   name = "pyrime";
   env = {
-    LD_LIBRARY_PATH = "${libclang.lib}/lib";
+    LD_LIBRARY_PATH = lib.makeLibraryPath [
+      libclang
+    ];
   };
   buildInputs = [
     librime
